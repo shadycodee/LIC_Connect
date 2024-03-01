@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" type="image/jpeg" href="icon.jpg" >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>manage</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 25px;
+            padding: 0;
+        }
+
+        #showFormBtn,
+        #logoutContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #logoutContainer, a {
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            background-color: #333;
+            padding: 5px 20px;
+            display: inline-flex;
+        }
+
+        #showFormBtn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #registrationForm {
+            display: none;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        #formContainer {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #closeFormBtn {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            background-color: red;
+            color: white;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        #tableBtn {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0;  
+        }
+        .hdr {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="hdr">
+        <h1>LIC GATEWAY</h1>
+        <form id="logoutBtn" action="{{ url_for('logout') }}" method="get">
+        <input type="submit" id="logoutContainer" value="logout">
+    </form>
+    </div>
+    
+    <div id="tableBtn">
+        <button id="showFormBtn">Register student</button>
+        <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
+        <!-- <button onclick="searchRecord()">Search</button> -->
+    </div>
+    
+    
+
+<!--REGISTER FORM-->
+<div id="overlay">
+    <div id="formContainer">
+        <button id="closeFormBtn">&times;</button>
+        <form method="POST" onsubmit="submitForm()">
+
+        <label for="studentid">Student ID:</label> 
+        <input type="text" id="studentid" name="studentid" required><br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="course">Course:</label>
+        <input type="text" id="course" name="course" required><br>
+        
+
+        <button type="submit" onclick="submitForm()">Submit</button>
+        
+      </form>
+    </div>
+  </div>
+<!--REGISTER FORM-->
+
+  
+
+<div style="overflow: auto; max-height: 300px;">
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Time Left</th>
+            
+               
+            </tr>
+        </thead>
+        <tbody id="studentTableBody">
+            {% for student in students %}
+            <tr>
+                <td>{{ student[0] }}</td>
+                <td>{{ student[1] }}</td>
+                <td>{{ student[2] }}</td>
+                <td>{{ student[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
+<script>
+    function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        searchRecord();
+    }
+}
+
+    let startIndex = 0;  // Starting index for displayed records
+    let allStudents = [];  // Variable to store all students in the database
+    let current_page = 0;
+    
+// Function to update the table with the first five records
+function updateTableWithFirstFive() {
+    const pageSize = 5;  // Number of records to display
+
+    // Fetch the first five records from the server
+    fetch('/get_first_five_students')
+        .then(response => response.json())
+        .then(data => {
+            // Clear the table body
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = '';
+
+            // Add the first five records to the table
+            for (let i = 0; i < Math.min(data.length, pageSize); i++) {
+                const student = data[i];
+                const row = `<tr>
+                                <td>${student[0]}</td>
+                                <td>${student[1]}</td>
+                                <td>${student[2]}</td>
+                                <td>${student[3]}</td>
+                            </tr>`;
+                tbody.innerHTML += row;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Call the function to update the table with the first five records when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+    updateTableWithFirstFive();
+});
+
+
+    //search student ID
+    function searchRecord() {
+        var input = document.getElementById('searchInput').value.toLowerCase();
+        var table = document.getElementById('studentTableBody');  // Corrected ID
+        var rows = table.getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+            var studentId = cells[0].textContent.toLowerCase();  // Use textContent instead of innerText
+
+            if (studentId.includes(input)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+
+    //display the table
+    function resetTable() {
+      var table = document.getElementById('tableBody');
+      var rows = table.getElementsByTagName('tr');
+
+      for (var i = 0; i < rows.length; i++) {
+        rows[i].style.display = '';
+      }
+    }
+    
+    function toggleForm() {
+        var form = document.getElementById("formContainer");
+        form.style.display = (form.style.display === "none") ? "block" : "none";
+    }
+
+    function submitForm(event) {
+            event.preventDefault();
+
+            // Get form data
+            var formData = {
+                studentid: document.getElementById("studentid").value,
+                name: document.getElementById("name").value,
+                password: document.getElementById("password").value,
+                course: document.getElementById("course").value,
+                 
+            };
+
+            // AJAX request to send form data to the server
+            $.ajax({
+                type: 'POST',
+                url: '/manage',  // Update the URL to the correct endpoint
+                data: formData,
+                success: function(response) {
+                    // Handle the response from the server if needed
+                    console.log(response);
+                    
+                    // Close the overlay
+                    document.getElementById('overlay').style.display = 'none';
+
+                    // Refresh the page to display the updated student list
+                    location.reload();
+                }
+            });
+        }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const showFormBtn = document.getElementById('showFormBtn');
+        const overlay = document.getElementById('overlay');
+        const closeFormBtn = document.getElementById('closeFormBtn');
+
+        showFormBtn.addEventListener('click', function () {
+            overlay.style.display = 'flex';
+        });
+
+        closeFormBtn.addEventListener('click', function () {
+            overlay.style.display = 'none';
+        });
+        cancelFormBtn.addEventListener('click', function () {
+            overlay.style.display = 'none';
+  });
+
+});
+    
+</script>
+</body>
+</html>
