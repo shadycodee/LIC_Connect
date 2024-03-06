@@ -7,3 +7,6 @@ The LIC_System is a computer tracking system designed for monitoring students' c
 <strong>Usage Monitoring:</strong> Each student is allocated a free quota of 10 hours per semester for computer usage with the LIC.<br>
 <strong>Usage Charging:</strong> Once a student exhausts their free 10-hour allocation, any additional usage will incur charges. Students will be notified and prompted to pay for the extra time if they wish to continue using the computers.
 
+<h2>Requirements</h2>
+Python Flask
+MySQL
