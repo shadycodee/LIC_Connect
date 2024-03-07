@@ -141,8 +141,8 @@ login_window = tk.Tk()
 login_window.attributes("-fullscreen", True)
 
 # Disable Alt+Tab
-login_window.attributes('-toolwindow', 1)
-login_window.attributes('-topmost', 1)
+# login_window.attributes('-toolwindow', 1)
+# login_window.attributes('-topmost', 1)
 
 # Intercept the window close event
 login_window.protocol("WM_DELETE_WINDOW", on_closing)
