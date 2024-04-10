@@ -7,9 +7,17 @@
     <title>manage</title>
     
     <style>
+        header {
+            color: #8C3860;
+            display: flex;
+        }
+        header img {
+            height: 50px;
+            width: auto;
+        }
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #FFF6EF;
             margin: 25px;
             padding: 0;
         }
@@ -107,12 +115,12 @@
     </style>
 </head>
 <body>
-    <div class="hdr">
-        <h1>LIC GATEWAY</h1>
+    <header>
+        <img src="/static/images/citu_logo.png" alt="school logo">
+        <h1>Cebu Insitute of Technology <br> UNIVERSITY</h1>   
         <form id="logoutBtn" action="{{ url_for('logout') }}" method="get">
         <input type="submit" id="logoutContainer" value="logout">
-    </form>
-    </div>
+    </header>
     
     <div id="tableBtn">
         <button id="showFormBtn">Register student</button>

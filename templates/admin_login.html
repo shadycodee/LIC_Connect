@@ -3,18 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>LIC Connect</title>
     
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: Tahoma;
+            background-image: url('/static/images/background.jpg');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
             margin: 0;
             padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         header {
-            background-color: #333;
             color: white;
             text-align: center;
             padding: 1em;
@@ -23,19 +29,22 @@
         main {
             max-width: 400px;
             margin: 50px auto;
-            background-color: white;
+            background-color: rgb(91, 71, 71);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 2px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            opacity: 90%;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #e4dcdc;
+            font-size: x-large;
         }
 
         .container {
-            margin-top: 20px;
+            margin: 20px;
+            width: 300px;
         }
 
         label {
@@ -54,7 +63,7 @@
         }
 
         input[type="submit"] {
-            background-color: #333;
+            background-color: #63c570;
             color: white;
             cursor: pointer;
             border: none;
@@ -63,15 +72,20 @@
         }
 
         input[type="submit"]:hover {
-            background-color: #555;
+            background-color: #218613;
         }
 
         footer {
-            margin-top: 50px;
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 1em;
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            right: 50px;
+            color: rgb(58, 54, 54);
+        }
+
+        footer img {
+            height: 50px;
+            width: auto;
         }
 
         p {
@@ -86,23 +100,23 @@
 </header>
 
 <main>
-    <h1>LIC GATEWAY</h1>
+    <h1>Admin Login</h1>
     {% if message %}
         <p>{{ message }}</p>
     {% endif %}
     <form action="/admin_login" method="post">
         <div class="container">
-            <label for="uname">Username:</label><br>
-            <input type="text" id="uname" name="uname" required><br>
-            <label for="pass">Password:</label><br>
-            <input type="password" id="pass" name="pass" required>  <br>
-            <input type="submit" value="Submit">
+            <input type="text" id="uname" name="uname" placeholder="Username" required><br>
+            <input type="password" id="pass" name="pass" placeholder="Password" required>  <br>
+            <input type="submit" value="Login">
         </div>
     </form>
 </main>
 
 <footer>
     <!-- Footer content goes here -->
+    <img src="/static/images/lrac_logo.png" alt="school logo">
+    <h5>LIC Connect</h5>
 </footer>
 
 </body>

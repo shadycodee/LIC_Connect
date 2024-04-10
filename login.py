@@ -10,9 +10,9 @@ def connect_to_mysql():
     try:
         # Replace these with your MySQL server details
         connection = mysql.connector.connect(
-            host="172.16.97.22",
+            host="localhost",
             user="root",
-            password=" ",
+            password="",
             database="records"
         )
         return connection
@@ -141,26 +141,26 @@ login_window = tk.Tk()
 login_window.attributes("-fullscreen", True)
 
 # Disable Alt+Tab
-login_window.attributes('-toolwindow', 1)
-login_window.attributes('-topmost', 1)
+# login_window.attributes('-toolwindow', 1)
+# login_window.attributes('-topmost', 1)
 
 # Intercept the window close event
 login_window.protocol("WM_DELETE_WINDOW", on_closing)
 
 # Open the image file
-image_path = "logo.png" 
-original_image = Image.open(image_path)
-resized_image = original_image.resize((100, 100)) 
+# image_path = "logo.png" 
+# original_image = Image.open(image_path)
+# resized_image = original_image.resize((100, 100)) 
  
-# Create a Tkinter-compatible photo image
-photo = ImageTk.PhotoImage(resized_image)
+# # Create a Tkinter-compatible photo image
+# photo = ImageTk.PhotoImage(resized_image)
 
 #Create a frame to hold the image and text
 frame = tk.Frame(login_window)
 frame.pack(pady=(100, 10))
 
-label_image = tk.Label(frame, image=photo)
-label_image.pack(side=tk.LEFT)
+# label_image = tk.Label(frame, image=photo)
+# label_image.pack(side=tk.LEFT)
 
 # Add the text "LIC Gateway" beside the image
 font_style = ("Arial", 30, "bold")

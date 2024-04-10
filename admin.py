@@ -7,9 +7,9 @@ app = Flask(__name__)
 # Set a secret key for the application when using 'flash'
 app.secret_key = 'qWer#123ty'
 
-app.config['MYSQL_HOST'] = '172.16.97.22'
+app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ' '
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'records'
 
 mysql = MySQL(app)
@@ -36,7 +36,7 @@ def admin_login():
 
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['authenticated'] = True
-            return redirect(url_for('manage'))
+            return redirect(url_for('dashboard'))
         else:
             return render_template('admin_login.html', message='Invalid Credentials')
     return render_template('admin_login.html')
@@ -47,8 +47,8 @@ def logout():
     session.pop('authenticated', None)
     return redirect(url_for('admin_login'))
 
-@app.route('/manage', methods=['GET', 'POST'])
-def manage():
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
     if request.method == 'POST':
         studentid = request.form['studentid']
         name = request.form['name']
@@ -67,7 +67,7 @@ def manage():
         flash("Student registered successfully")
 
         # Redirect to the 'manage' route (GET) after successful registration
-        return redirect(url_for('manage'))
+        return redirect(url_for('dashboard'))
 
     cur = mysql.connection.cursor()
     cur.execute("SELECT studentid, name, course, time_left FROM students")
@@ -76,7 +76,7 @@ def manage():
 
     students = [(student[0], student[1], student[2], convert_minutes_to_time(student[3])) for student in students]
 
-    return render_template('manage.html', students=students)
+    return render_template('dashboard.html', students=students)
 
 
 @app.route('/login')
