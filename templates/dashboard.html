@@ -4,36 +4,72 @@
     <link rel="shortcut icon" type="image/jpeg" href="icon.jpg" >
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>manage</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <title>Dashboard</title>
     
     <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .arrow::after {
+            content: "\25BE"; /* Unicode for down arrow */
+            margin-left: 5px;
+        }
+
         header {
-            color: #8C3860;
+            color: #B53737;
+            align-items: center;
+            justify-content: space-between;
+            font-family: "Montserrat";
             display: flex;
+            margin: 10px;
         }
         header img {
             height: 50px;
             width: auto;
         }
+        main {
+            border-top: 2px solid #B53737;
+            margin: 10px;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             background-color: #FFF6EF;
             margin: 25px;
             padding: 0;
         }
-
-        #showFormBtn,
-        #logoutContainer {
-            text-align: center;
-            margin-top: 20px;
+        nav {
+            padding-right: 50px;
         }
-        #logoutContainer, a {
-            color: white;
+        nav a{
+            color: #B53737;
             text-decoration: none;
-            border-radius: 5px;
-            background-color: #333;
-            padding: 5px 20px;
-            display: inline-flex;
         }
 
         #showFormBtn {
@@ -111,17 +147,31 @@
         .hdr {
             display: flex;
             justify-content: space-between;
+            
         }
     </style>
 </head>
 <body>
     <header>
-        <img src="/static/images/citu_logo.png" alt="school logo">
-        <h1>Cebu Insitute of Technology <br> UNIVERSITY</h1>   
-        <form id="logoutBtn" action="{{ url_for('logout') }}" method="get">
-        <input type="submit" id="logoutContainer" value="logout">
+        <div>
+            <img src="lrac_logo.png" alt="school logo">
+            <h1>LIC Connect <br>Library Internet Center</h1>
+        </div>
+        
+        <nav>
+            <a href="/Dashboard">Dashboard</a>  
+            <a href="/Analytics">Analytics</a>  
+             <div class="dropdown">
+                <span>Account</span> <span class="arrow"></span>
+                <div class="dropdown-content">
+                    <a href="#">Settings</a>
+                    <a href="#" onclick="document.getElementById('logoutBtn').submit();">Logout</a>
+                </div>
+            </div>
+        </nav>
     </header>
     
+    <main>
     <div id="tableBtn">
         <button id="showFormBtn">Register student</button>
         <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
@@ -182,7 +232,7 @@
         </tbody>
     </table>
 </div>
-
+</main>
 
 <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
 <script>
