@@ -44,11 +44,7 @@
 
         header {
             color: #B53737;
-            align-items: center;
-            justify-content: space-between;
             font-family: "Montserrat";
-            display: flex;
-            margin: 10px;
         }
         header img {
             height: 50px;
@@ -64,8 +60,9 @@
             margin: 25px;
             padding: 0;
         }
-        nav {
-            padding-right: 50px;
+        #nav-containter {
+            display: flex;
+            padding: 20px;
         }
         nav a{
             color: #B53737;
@@ -75,11 +72,12 @@
         #showFormBtn {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #333;
+            background-color: #872222;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             margin-right: 10px;
+            margin-top: 20px;
         }
 
         #registrationForm {
@@ -100,7 +98,7 @@
         }
 
         th {
-            background-color: #333;
+            background-color: #872222;
             color: white;
         }
 
@@ -149,26 +147,43 @@
             justify-content: space-between;
             
         }
+        #searchInput{
+            margin-top: 20px;
+        }
+        #head_container{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+        }
+        #head_container ul{
+            list-style-type: none;
+        }
+        #head_container ul li{
+            display: inline;
+            margin-right: 75px;
+            padding-right: 5px;
+        }
+        #head_container ul li a{
+            text-decoration: none;
+            color: #B53737;
+            font-weight: bold;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <header>
-        <div>
+        <div id="head_container">
             <img src="lrac_logo.png" alt="school logo">
-            <h1>LIC Connect <br>Library Internet Center</h1>
+            <ul>
+                <li><a href="">Dashboard</a></li>
+                <li><a href="">Analytics</a></li>
+                <li><a href="">Account</a></li>
+            </ul> 
+                    <!-- <a href="#" onclick="document.getElementById('logoutBtn').submit();">Logout</a> --> 
         </div>
-        
-        <nav>
-            <a href="/Dashboard">Dashboard</a>  
-            <a href="/Analytics">Analytics</a>  
-             <div class="dropdown">
-                <span>Account</span> <span class="arrow"></span>
-                <div class="dropdown-content">
-                    <a href="#">Settings</a>
-                    <a href="#" onclick="document.getElementById('logoutBtn').submit();">Logout</a>
-                </div>
-            </div>
-        </nav>
+       
     </header>
     
     <main>
@@ -177,9 +192,6 @@
         <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
         <!-- <button onclick="searchRecord()">Search</button> -->
     </div>
-    
-    
-
 <!--REGISTER FORM-->
 <div id="overlay">
     <div id="formContainer">
@@ -212,10 +224,12 @@
     <table>
         <thead>
             <tr>
-                <th>Student ID</th>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Course</th>
                 <th>Time Left</th>
+                <th>History</th>
+                <th>Action</th>s
             
                
             </tr>

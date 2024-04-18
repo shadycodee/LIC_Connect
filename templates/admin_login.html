@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Tahoma;
-            background-image: url('/static/images/background.jpg');
+            background-image: url('background.jpg');
             background-size: cover;
             background-position: center bottom;
             background-repeat: no-repeat;
@@ -101,9 +101,9 @@
 
 <main>
     <h1>Admin Login</h1>
-    {% if message %}
+    <!-- {% if message %}
         <p>{{ message }}</p>
-    {% endif %}
+    {% endif %} -->
     <form action="/admin_login" method="post">
         <div class="container">
             <input type="text" id="uname" name="uname" placeholder="Username" required><br>
@@ -115,7 +115,7 @@
 
 <footer>
     <!-- Footer content goes here -->
-    <img src="/static/images/lrac_logo.png" alt="school logo">
+    <img src="lrac_logo.png" alt="school logo">
     <h5>LIC Connect</h5>
 </footer>
 
