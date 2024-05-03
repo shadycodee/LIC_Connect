@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-    <title>Dashboard</title>
-    
+
+    <title>LIC Connect</title>
     <style>
         .dropdown {
             position: relative;
@@ -113,11 +113,13 @@
             justify-content: center;
             align-items: center;
         }
-        #formContainer {
+        
+        #historyContainer {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            display: none;
         }
 
         #closeFormBtn {
@@ -158,9 +160,11 @@
         }
         #head_container ul{
             list-style-type: none;
+            margin: 0;
+            padding: 0;
         }
         #head_container ul li{
-            display: inline;
+            display: inline-block;
             margin-right: 75px;
             padding-right: 5px;
         }
@@ -170,6 +174,116 @@
             font-weight: bold;
             font-size: 18px;
         }
+        #head_container ul li ul.dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        #head_container ul li:hover ul.dropdown-content {
+            display: block;
+        }
+        #head_container ul li ul.dropdown-content li {
+            display: block;
+        }
+
+        #head_container ul li ul.dropdown-content li a {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        #head_container ul ul {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        th {
+            text-align: center;
+        }
+        #overlayHistory {
+            display: none;
+            position: fixed;
+            background-color: #fff;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+            z-index: 1000; /* ensure the overlay is on top of other elements */
+        }  
+        
+        /*REGISTER FORM */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        #formContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .closeFormBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"],
+        form input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        form button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #B53737;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        form button[type="submit"]:hover {
+            background-color: #e54141;
+        }
+        /*REGISTER FORM */
     </style>
 </head>
 <body>
@@ -179,37 +293,42 @@
             <ul>
                 <li><a href="">Dashboard</a></li>
                 <li><a href="">Analytics</a></li>
-                <li><a href="">Account</a></li>
+                <li>
+                    <a href="#">Account</a>
+                    <ul class="dropdown-content" >
+                        <li><a href="#" >Logout</a></li>
+                    </ul>
+                </li>
             </ul> 
-                    <!-- <a href="#" onclick="document.getElementById('logoutBtn').submit();">Logout</a> --> 
         </div>
        
     </header>
-    
-    <main>
+
     <div id="tableBtn">
         <button id="showFormBtn">Register student</button>
         <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
-        <!-- <button onclick="searchRecord()">Search</button> -->
     </div>
-<!--REGISTER FORM-->
+    <!--REGISTER FORM-->
 <div id="overlay">
     <div id="formContainer">
-        <button id="closeFormBtn">&times;</button>
+           <h2>Add Student</h2> 
+            <button class="closeFormBtn">&times;</button>
         <form method="POST" onsubmit="submitForm()">
 
-        <label for="studentid">Student ID:</label> 
+        <label for="studentid">Student ID</label> 
         <input type="text" id="studentid" name="studentid" required><br>
 
-        <label for="name">Name:</label>
+        <label for="name">Name</label> <br>
         <input type="text" id="name" name="name" required><br>
 
-        <label for="password">Password:</label>
+        <label for="course">Course</label> <br>
+        <input type="text" id="course" name="course" required><br>
+
+        <label for="password">Password</label>
         <input type="password" id="password" name="password" required><br>
 
-        <label for="course">Course:</label>
-        <input type="text" id="course" name="course" required><br>
-        
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="password2" name="password2" required>
 
         <button type="submit" onclick="submitForm()">Submit</button>
         
@@ -217,21 +336,30 @@
     </div>
   </div>
 <!--REGISTER FORM-->
-
-  
-
-<div style="overflow: auto; max-height: 300px;">
+<!--HISTORY FORM-->
+    <div id="overlayHistory">
+        <button class="closeFormBtn">&times;</button>
+        <table>
+            <tr>
+                <th>Student ID</th>
+                <th>Login</th>
+                <th>Logout</th>
+                <th>Time Consumed</th>
+                <th>Time Left</th>
+            </tr>
+        </table>
+    </div>
+<!--HISTORY FORM-->
+    
     <table>
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Student ID</th>
                 <th>Name</th>
                 <th>Course</th>
                 <th>Time Left</th>
                 <th>History</th>
-                <th>Action</th>s
-            
-               
+                <th>Payment</th>
             </tr>
         </thead>
         <tbody id="studentTableBody">
@@ -241,14 +369,15 @@
                 <td>{{ student[1] }}</td>
                 <td>{{ student[2] }}</td>
                 <td>{{ student[3] }}</td>
+                <td style="text-align: center;"><button onclick="showHistory()" id="showHistory">History</button></td>
+                <td style="text-align: center;"><button style="border: none; background-color: transparent;" onclick="payment('{{ student[0]}}')"><img id="payment_icon" src="payment.png" alt="Payment"></button></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-</main>
-
-<!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
+    
+</body>
 <script>
     function handleKeyPress(event) {
     if (event.key === "Enter") {
@@ -322,10 +451,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
     
-    function toggleForm() {
-        var form = document.getElementById("formContainer");
-        form.style.display = (form.style.display === "none") ? "block" : "none";
-    }
+    // function toggleForm() {
+    //     var form = document.getElementById("formContainer");
+    //     form.style.display = (form.style.display === "none") ? "block" : "none";
+    // }
 
     function submitForm(event) {
             event.preventDefault();
@@ -358,24 +487,63 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const showFormBtn = document.getElementById('showFormBtn');
-        const overlay = document.getElementById('overlay');
-        const closeFormBtn = document.getElementById('closeFormBtn');
+        document.addEventListener('DOMContentLoaded', function () {
+            const showFormBtn = document.getElementById('showFormBtn');
+            const overlay = document.getElementById('overlay');
+            const closeFormBtn = document.getElementById('closeFormBtn');
 
-        showFormBtn.addEventListener('click', function () {
-            overlay.style.display = 'flex';
+            showFormBtn.addEventListener('click', function () {
+                overlay.style.display = 'flex';
+            });
+
+            closeFormBtn.addEventListener('click', function () {
+                overlay.style.display = 'none';
+            });
+            cancelFormBtn.addEventListener('click', function () {
+                overlay.style.display = 'none';
+    });
+
+    });
+
+    function showHistory(){
+        document.getElementById("overlayHistory").style.display ="block";
+    }
+
+    function logout() {
+        // Add your logout functionality here
+        console.log("Logout function triggered.");
+        // Example: Redirect to logout page
+        window.location.href = "admin_login.html"; // Change "logout.php" to your actual logout endpoint
+    }
+
+    // Add event listeners to all close buttons
+    document.querySelectorAll(".closeFormBtn").forEach(function(button) {
+        button.addEventListener("click", function() {
+            console.log("Close button clicked");
+            document.getElementById("overlay").style.display = "none";
         });
+    });
 
-        closeFormBtn.addEventListener('click', function () {
-            overlay.style.display = 'none';
-        });
-        cancelFormBtn.addEventListener('click', function () {
-            overlay.style.display = 'none';
-  });
+    // Attach input event listeners to password and confirm password fields
+    document.getElementById("password").addEventListener("input", checkPasswordMatch);
+    document.getElementById("password2").addEventListener("input", checkPasswordMatch);
+    function checkPasswordMatch() {
+            var pass1 = document.getElementById("password").value;
+            var pass2 = document.getElementById("password2").value;
+            var errorSpan = document.getElementById("passwordError");
 
-});
-    
+            if (pass1 !== pass2 && pass2 !== pass1) {
+                errorSpan.textConten
+                
+                t = "Passwords do not match"; 
+            } else if (pass2 !== pass1) {
+                errorSpan.textContent = "Passwords do not match"; 
+            } else {
+                errorSpan.textContent = ""; 
+            }
+        }
+
+        
+
 </script>
-</body>
 </html>
