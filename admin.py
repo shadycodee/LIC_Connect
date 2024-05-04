@@ -61,11 +61,8 @@ def dashboard():
                     (studentid, name, password, course))
         mysql.connection.commit()
         cur.close()
-
-        #return jsonify({"message": "Student registered successfully"})
-        # Use flash to store a message for the next request
-        flash("Student registered successfully")
-
+        # Flash a success message after successful registration
+        flash('Student registered successfully!', 'success')
         # Redirect to the 'manage' route (GET) after successful registration
         return redirect(url_for('dashboard'))
 

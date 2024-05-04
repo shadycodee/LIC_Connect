@@ -8,6 +8,28 @@
 
     <title>LIC Connect</title>
     <style>
+
+        /* alert message for register student */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+        /* alert message for register student */
+        
         .dropdown {
             position: relative;
             display: inline-block;
@@ -284,6 +306,16 @@
 
     <div id="tableBtn">
         <button id="showFormBtn">Register student</button>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div id="alert-message" class="alert alert-{{ category }}">
+                      {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
     </div>
     <!--REGISTER FORM-->
@@ -530,7 +562,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 errorSpan.textContent = ""; 
             }
         }
-
+         // Remove the alert message after 5 seconds
+         setTimeout(function() {
+          var alertMessage = document.getElementById('alert-message');
+          if (alertMessage) {
+            alertMessage.remove();
+          }
+        }, 5000);
         
 
 </script>
