@@ -305,7 +305,7 @@
     </header>
 
     <div id="tableBtn">
-        <button id="showFormBtn">Register student</button>
+        <button id="showFormBtn">Add student</button>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -372,8 +372,7 @@
                 <th>Name</th>
                 <th>Course</th>
                 <th>Time Left</th>
-                <th>History</th>
-                <th>Payment</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody id="studentTableBody">
@@ -383,8 +382,10 @@
                 <td>{{ student[1] }}</td>
                 <td>{{ student[2] }}</td>
                 <td>{{ student[3] }}</td>
-                <td style="text-align: center;"><button onclick="showHistory()" class="showHistory">History</button></td>
-                <td style="text-align: center;"><button style="border: none; background-color: transparent;" onclick="payment('{{ student[0]}}')"><img id="payment_icon" src="payment.png" alt="Payment"></button></td>
+                <td style="text-align: center;">
+                    <button onclick="showHistory()" class="showHistory">History</button>
+                    <button>Payment</button>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
