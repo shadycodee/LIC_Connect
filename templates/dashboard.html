@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-
+    
     <title>LIC Connect</title>
     <style>
 
@@ -349,21 +349,47 @@
     </div>
   </div>
 <!--REGISTER FORM-->
-<!--HISTORY FORM-->
+<!--HISTORY CONTAINER-->
     <div id="overlayHistory">
         <div id="historyForm">
         <button id="closeHistory">&times;</button>
-        <table>
-            <tr>
-                <th>Student ID</th>
-                <th>Login</th>
-                <th>Logout</th>
-                <th>Time Consumed</th>
-            </tr>
-        </table>
+        <h1>History</h1>
+        {% if login_sessions %}
+        <style>
+        </style>
+            <div>
+                {% for record in login_sessions %}
+                    <div>
+                        <p><strong>Student ID:</strong> {{ record[0] }}</p>
+                        <p><strong>Login Time:</strong> {{ record[1] }}</p>
+                        <p><strong>Logout Time:</strong> {{ record[2] }}</p>
+                        <p><strong>Consumed Time:</strong> {{ record[3] }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No login sessions available.</p>
+        {% endif %}
+
      </div>
     </div>
-<!--HISTORY FORM-->
+<!--HISTORY CONTAINER-->
+
+<!--PAYMENT FORM-->
+<div id="overlayPayment">
+    <div id="paymentcontainer"> 
+        <h1>Payment</h1>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<!--PAYMENT FORM-->
     <table>
         <thead>
             <tr>
@@ -382,8 +408,8 @@
                 <td>{{ student[2] }}</td>
                 <td>{{ student[3] }}</td>
                 <td style="text-align: center;">
-                    <button onclick="showHistory()" class="showHistory">History</button>
-                    <button>Payment</button>
+                    <button onclick="showHistory(this)" class="showHistory">History</button>
+                    <button class="">Payment</button>
                 </td>
             </tr>
             {% endfor %}
@@ -393,44 +419,36 @@
     
 </body>
 <script>
+
+    function showHistory(button){
+        var id = button.parentNode.parentNode.cells[0].textContent;
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST","/history", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function (){
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+                if(xhr.status === 200) {
+                    // Request successful, handle response if needed
+                    console.log("Response fron Flask: ", xhr.responseText);
+                } else {
+                    // Request failed, handle error if needed
+                    console.error("Error:", xhr.status);
+                }
+            }
+        };
+        // Convert id to JSON format and send it in the request body
+        var data = JSON.stringify({ "get": id});
+        xhr.send(data);
+    }
+
     function handleKeyPress(event) {
     if (event.key === "Enter") {
         event.preventDefault();
         searchRecord();
     }
 }
-
-    let startIndex = 0;  // Starting index for displayed records
-    let allStudents = [];  // Variable to store all students in the database
-    let current_page = 0;
     
-// Function to update the table with the first five records
-function updateTableWithFirstFive() {
-    const pageSize = 5;  // Number of records to display
-
-    // Fetch the first five records from the server
-    fetch('/get_first_five_students')
-        .then(response => response.json())
-        .then(data => {
-            // Clear the table body
-            const tbody = document.getElementById('studentTableBody');
-            tbody.innerHTML = '';
-
-            // Add the first five records to the table
-            for (let i = 0; i < Math.min(data.length, pageSize); i++) {
-                const student = data[i];
-                const row = `<tr>
-                                <td>${student[0]}</td>
-                                <td>${student[1]}</td>
-                                <td>${student[2]}</td>
-                                <td>${student[3]}</td>
-                            </tr>`;
-                tbody.innerHTML += row;
-            }
-        })
-        .catch(error => console.error('Error:', error));
-}
-
 // Call the function to update the table with the first five records when the page loads
 document.addEventListener('DOMContentLoaded', function () {
     updateTableWithFirstFive();
@@ -517,25 +535,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 overlay.style.display = 'none';
     });
     });
-
+        
     document.addEventListener('DOMContentLoaded', function () {
-            const historyButtons= document.querySelectorAll('.showHistory');
-            const overlay = document.getElementById('overlayHistory');
-            const closeform = document.getElementById('closeHistory');
+    const historyButtons = document.querySelectorAll('.showHistory');
+    const overlay = document.getElementById('overlayHistory');
+    const closeform = document.getElementById('closeHistory');
 
-            historyButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    overlay.style.display = 'flex';
-                });
-            });
-
-            closeform.addEventListener('click', function(){
-                overlay.style.display = 'none';
-            });
+    historyButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const studentId = this.dataset.studentId; // Get the student ID from the button's dataset
+            overlay.style.display = 'flex';
+        });
     });
 
-    
+    closeform.addEventListener('click', function () {
+        overlay.style.display = 'none';
+    });
+});
 
+            
+    
 
     function logout() {
         // Add your logout functionality here

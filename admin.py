@@ -47,8 +47,29 @@ def logout():
     session.pop('authenticated', None)
     return redirect(url_for('admin_login'))
 
+@app.route('/record', methods=['GET']) 
+def showhistory():
+
+    studentid = session.get('studentid')
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT studentid, login_time, logout_time, consumed_time FROM login_sessions WHERE studentid = %s", (studentid,))
+    login_sessions = cur.fetchall()
+    cur.close()
+
+
+    login_sessions = [(record[0], record[1].strftime('%Y-%m-%d %H:%M:%S') if record[1] else None, record[2].strftime('%Y-%m-%d %H:%M:%S') if record[2] else None, record[3]) for record in login_sessions]
+    return render_template('history.html', login_sessions=login_sessions)
+@app.route('/history', methods=['POST'])
+def handle_request():
+    data = request.get_json()
+    id = str(data.get('get'))
+    session['studentid'] = id
+    print("studentid in handle_request = " + id)
+    return redirect(url_for('dashboard', studentid = id))
+
 @app.route('/dashboard', methods=['GET', 'POST'])
-def dashboard():
+def dashboard():    
+
     if request.method == 'POST':
         studentid = request.form['studentid']
         name = request.form['name']
@@ -73,8 +94,25 @@ def dashboard():
 
     students = [(student[0], student[1], student[2], convert_minutes_to_time(student[3])) for student in students]
 
-    return render_template('dashboard.html', students=students)
+    # studentid = session.get('studentid')
+    studentid = 'test'
+    print("studentid in dashboard = " + studentid)
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT studentid, login_time, logout_time, consumed_time FROM login_sessions WHERE studentid = %s", (studentid,))
+    login_sessions = cur.fetchall()
+    cur.close()
 
+    login_sessions = [(record[0], record[1].strftime('%Y-%m-%d %H:%M:%S') if record[1] else None, record[2].strftime('%Y-%m-%d %H:%M:%S') if record[2] else None, record[3]) for record in login_sessions]
+
+    return render_template('dashboard.html', students=students, login_sessions=login_sessions)
+
+
+
+
+# @app.route('/process_student_id', methods=['POST'])
+# def process_student_id():
+#     data = request.get_json()
+#     student_id =data['student_id']
 
 @app.route('/login')
 def student_login():
