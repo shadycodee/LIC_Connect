@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Tahoma;
-            background-image: url('background.jpg');
+            background-image: url("{{ url_for('static', filename='images/background.jpg') }}");
             background-size: cover;
             background-position: center bottom;
             background-repeat: no-repeat;
@@ -45,6 +45,7 @@
         .container {
             margin: 20px;
             width: 300px;
+            border-radius: 50px;
         }
 
         label {
@@ -63,7 +64,7 @@
         }
 
         input[type="submit"] {
-            background-color: #63c570;
+            background-color: #54a25e;
             color: white;
             cursor: pointer;
             border: none;
@@ -115,8 +116,7 @@
 
 <footer>
     <!-- Footer content goes here -->
-    <img src="lrac_logo.png" alt="school logo">
-    <h5>LIC Connect</h5>
+    <img src="{{ url_for('static', filename='images/lrac_logo.png') }}" alt="school logo">
 </footer>
 
 </body>
