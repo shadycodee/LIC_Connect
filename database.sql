@@ -6,7 +6,6 @@ CREATE TABLE Login_Sessions (
     login_time DATETIME,
     logout_time DATETIME,
     consumed_time INT,
-    time_left INT DEFAULT 600,
     FOREIGN KEY (studentID) REFERENCES Student(studentID)
 );
 
