@@ -479,12 +479,6 @@
         searchRecord();
     }
 }
-    
-// Call the function to update the table with the first five records when the page loads
-document.addEventListener('DOMContentLoaded', function () {
-    updateTableWithFirstFive();
-});
-
 
     //search student ID
     function searchRecord() {
@@ -503,21 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
-    //display the table
-    function resetTable() {
-      var table = document.getElementById('tableBody');
-      var rows = table.getElementsByTagName('tr');
-
-      for (var i = 0; i < rows.length; i++) {
-        rows[i].style.display = '';
-      }
-    }
     
-    // function toggleForm() {
-    //     var form = document.getElementById("formContainer");
-    //     form.style.display = (form.style.display === "none") ? "block" : "none";
-    // }
 
     function submitForm(event) {
             event.preventDefault();
