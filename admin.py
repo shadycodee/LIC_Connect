@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
 from flask import jsonify
+from flask_login import login_required, LoginManager
 
 app = Flask(__name__)
 
@@ -18,9 +19,7 @@ mysql = MySQL(app)
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "admin"
 
-# Define a list of routes that do not require authentication
-# You can add more routes if needed
-NO_AUTH_REQUIRED_ROUTES = ['admin_login', 'student_login']
+# Define a list of routes that do not require authentic
 
 def convert_minutes_to_time(minutes):
     hours = minutes // 60
@@ -32,7 +31,6 @@ def admin_login():
     if request.method == 'POST':
         username = request.form['uname']
         password = request.form['pass']
-
 
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['authenticated'] = True
@@ -105,14 +103,6 @@ def dashboard():
     login_sessions = [(record[0], record[1].strftime('%Y-%m-%d %H:%M:%S') if record[1] else None, record[2].strftime('%Y-%m-%d %H:%M:%S') if record[2] else None, record[3]) for record in login_sessions]
 
     return render_template('dashboard.html', students=students, login_sessions=login_sessions)
-
-
-
-
-# @app.route('/process_student_id', methods=['POST'])
-# def process_student_id():
-#     data = request.get_json()
-#     student_id =data['student_id']
 
 @app.route('/login')
 def student_login():

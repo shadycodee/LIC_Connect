@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     
     <title>LIC Connect</title>
     <style>
@@ -281,22 +283,55 @@
             text-align: center;
         }
 
-        /*REGISTER FORM */
+        .showHistory{
+            border: none;
+            color: white;
+            background-color: #dccc26;
+        }
 
+        .paymentbtn {
+            border: none;
+            background-color: #3a733b;
+            color: white;
+        }
+
+        /*REGISTER FORM */
+        /*PAYMENT FORM*/
+        .overlayPayment {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .paymentcontainer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        /*PAYMENT FORM*/
         
     </style>
 </head>
 <body>
     <header>
         <div id="head_container">
-            <img src="lrac_logo.png" alt="school logo">
+            <img src="{{ url_for('static', filename='images/lrac_logo.png') }}" alt="school logo">
             <ul>
                 <li><a href="">Dashboard</a></li>
                 <li><a href="">Analytics</a></li>
                 <li>
                     <a href="#">Account</a>
                     <ul class="dropdown-content" >
-                        <li><a href="#" >Logout</a></li>
+                        <li><a href="{{ url_for('admin_login') }}" >Logout</a></li>
                     </ul>
                 </li>
             </ul> 
@@ -376,19 +411,15 @@
 <!--HISTORY CONTAINER-->
 
 <!--PAYMENT FORM-->
-<div id="overlayPayment">
-    <div id="paymentcontainer"> 
+<div class="overlayPayment" id="overlaypayment">
+    <div class="paymentcontainer">  
+        <button onclick="closePayment()" class="closepay">&times;</button>  
         <h1>Payment</h1>
+        <h2>Student ID</h2>
+        <form method="post"></form>
 
     </div>
 </div>
-
-
-
-
-
-
-
 <!--PAYMENT FORM-->
     <table>
         <thead>
@@ -409,7 +440,7 @@
                 <td>{{ student[3] }}</td>
                 <td style="text-align: center;">
                     <button onclick="showHistory(this)" class="showHistory">History</button>
-                    <button class="">Payment</button>
+                    <button class="paymentbtn" onclick="openModal()">Payment</button>
                 </td>
             </tr>
             {% endfor %}
@@ -553,9 +584,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-            
-    
-
     function logout() {
         // Add your logout functionality here
         console.log("Logout function triggered.");
@@ -589,6 +617,30 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         }, 5000);
         
+
+        // Get the modal element
+    var modal = document.getElementById('overlaypayment');
+
+    // Get the button that opens the modal
+    var btn = document.querySelector('button');
+
+    // Get the close button element
+    var closeBtn = document.querySelector('.closepay');
+
+    function openModal(){
+        modal.style.display = 'block';
+    }
+
+    function closePayment(){
+        modal.style.display = 'none';
+    }
+    // Close modal when user clicks anywhere outside of it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
 
 </script>
 </html>
