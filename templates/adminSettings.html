@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Admin Settings</title>
+
+    <!-- Display flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <style>
+        /* The Modal (background) */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        }
+
+        body {
+            font-family: Montserrat;
+            background-image: url("{{ url_for('static', filename='images/background.jpg') }}");
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        main {
+            max-width: 600px; /* Modified width to 600px */
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #872222;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            line-height: 5px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #800000; /* Darker shade of maroon */
+        }
+
+        footer {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            right: 50px;
+            color: rgb(58, 54, 54);
+        }
+
+        footer img {
+            height: 50px;
+            width: auto;
+        }
+
+        
+    </style>
+
+</head>
+<body>
+    <main>
+        <h1>Admin Settings</h1>
+        
+        <form action="/admin_settings" method="post" onsubmit="return confirmChange()">
+            <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" name="current-password" required>
+            </div>
+            <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" name="new-password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
+            <button type="submit">Change Password</button>
+        </form>
+
+        <script>
+            async function checkCurrentPassword(password) {
+            try {
+                // Replace '/check_password' with the actual endpoint in your server that checks the password
+                const response = await fetch('/check_password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                // The server should return a JSON object with a 'correct' field that indicates if the password is correct
+                return data.correct;
+            } catch (error) {
+                console.error('Error:', error);
+                return false;
+            }
+        }
+
+
+        function confirmChange(event) {
+            // Prevent form from submitting
+            event.preventDefault();
+
+            var newPassword = document.getElementById('new-password').value;
+            var confirmPassword = document.getElementById('confirm-password').value;
+
+            // Check if new password and confirmation password match
+            if (newPassword !== confirmPassword) {
+                alert('New password and confirmation password do not match!');
+                return;
+            }
+
+            if (confirm('Are you sure you want to change the password?')) {
+                event.target.submit();
+            }
+        }
+
+</script>
+
+
+    </main>
+    <footer>
+        <img src="{{ url_for('static', filename='images/lrac_logo.png') }}" alt="school logo">
+    </footer>
+</body>
+</html>
