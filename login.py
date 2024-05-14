@@ -19,10 +19,12 @@ def connect_to_mysql():
     except mysql.connector.Error as err:
         messagebox.showerror("Error", f"Error: {err}")
         return None
-
+    
+# disabling close button 
 def on_closing():
     messagebox.showinfo("Warning", "Cannot close the application this way.")
 
+# authenticate credentials
 def authenticate_user(student_id, password):
     connection = connect_to_mysql()
     if not connection:
@@ -140,20 +142,13 @@ global login_window
 login_window = tk.Tk()
 login_window.attributes("-fullscreen", True)
 
+# Uncomment after testing
 # Disable Alt+Tab
 # login_window.attributes('-toolwindow', 1)
 # login_window.attributes('-topmost', 1)
 
 # Intercept the window close event
 login_window.protocol("WM_DELETE_WINDOW", on_closing)
-
-# Open the image file
-# image_path = "logo.png" 
-# original_image = Image.open(image_path)
-# resized_image = original_image.resize((100, 100)) 
- 
-# # Create a Tkinter-compatible photo image
-# photo = ImageTk.PhotoImage(resized_image)
 
 #Create a frame to hold the image and text
 frame = tk.Frame(login_window)
@@ -167,9 +162,6 @@ font_style = ("Arial", 30, "bold")
 label_text = tk.Label(frame, text="LIC Gateway", font=font_style)
 label_text.pack(side=tk.LEFT, padx=10)
 
-# Create a label for displaying the image
-# label = tk.Label(login_window, image=photo)
-# label.pack(pady=10)
 
 #frame for student ID label and entry
 frame_student_id = tk.Frame(login_window)
