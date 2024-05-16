@@ -11,7 +11,7 @@ app.secret_key = 'qWer#123ty'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'vlackhole'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'records'
 
 mysql = MySQL(app)
