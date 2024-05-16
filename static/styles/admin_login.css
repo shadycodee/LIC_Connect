@@ -1,0 +1,85 @@
+body {
+    font-family: Tahoma;
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header {
+    color: white;
+    text-align: center;
+    padding: 1em;
+}
+
+main {
+    max-width: 400px;
+    margin: 50px auto;
+    background-color: rgb(91, 71, 71);
+    padding: 20px;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 90%;
+}
+
+h1 {
+    text-align: center;
+    color: #e4dcdc;
+    font-size: x-large;
+}
+
+.container {
+    margin: 20px;
+    width: 300px;
+    border-radius: 50px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #54a25e;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #218613;
+}
+
+footer {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    right: 50px;
+    color: rgb(58, 54, 54);
+}
+
+footer img {
+    height: 50px;
+    width: auto;
+}
+
+p {
+    color: red;
+}
