@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_mysqldb import MySQL
 from flask import jsonify
 from flask_login import login_required, LoginManager
+from flask import flash
 
 app = Flask(__name__)
 
@@ -10,14 +11,10 @@ app.secret_key = 'qWer#123ty'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'vlackhole'
 app.config['MYSQL_DB'] = 'records'
 
 mysql = MySQL(app)
-
-#admin login credentials
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "admin"
 
 # Define a list of routes that do not require authentic
 
@@ -26,11 +23,74 @@ def convert_minutes_to_time(minutes):
     mins = minutes % 60
     return f"{hours:02d}:{mins:02d}:00"
 
+
+## for admin settingss
+def update_admin_password(new_password):
+    # Create a cursor object
+    cur = mysql.connection.cursor()
+
+    cur.execute("UPDATE admin SET password = %s WHERE username = 'admin'", (new_password,))
+    mysql.connection.commit()
+    cur.close()
+
+
+# settings route
+@app.route('/admin_settings', methods=['GET', 'POST'])
+def admin_settings():
+    if 'authenticated' not in session or not session['authenticated']:
+        return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        current_password = request.form['current-password']
+        new_password = request.form['new-password']
+        confirm_password = request.form['confirm-password']
+
+
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT password FROM admin WHERE username = 'admin'")
+
+        result = cur.fetchone()
+        cur.close()
+
+        if result is None:
+            flash('Invalid Credentials', 'error')
+            return redirect(url_for('admin_settings'))
+
+        stored_password = result[0]
+
+        if current_password != stored_password:
+            flash('Incorrect Current Password', 'error')
+            return redirect(url_for('admin_settings'))
+
+        if new_password != confirm_password:
+            flash('New Password and Confirm Password do not match', 'error')
+            return redirect(url_for('admin_settings'))
+
+        update_admin_password(new_password)
+        flash('Password changed successfully', 'success')
+        return redirect(url_for('admin_settings'))
+
+    return render_template('adminSettings.html')
+
+
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
         username = request.form['uname']
         password = request.form['pass']
+
+        # Create a cursor object
+        cur = mysql.connection.cursor()
+
+        # Execute a query to retrieve the admin credentials
+        cur.execute("SELECT username, password FROM admin WHERE username=%s", (username,))
+        result = cur.fetchone()
+        cur.close()
+
+        if result is None:
+            return render_template('admin_login.html', message='Invalid Credentials')
+
+        ADMIN_USERNAME, ADMIN_PASSWORD = result
 
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['authenticated'] = True
@@ -39,11 +99,13 @@ def admin_login():
             return render_template('admin_login.html', message='Invalid Credentials')
     return render_template('admin_login.html')
 
+
 @app.route('/logout')
 def logout():
     # Clear the user's session
     session.pop('authenticated', None)
     return redirect(url_for('admin_login'))
+
 
 @app.route('/record', methods=['GET']) 
 def showhistory():
@@ -57,6 +119,8 @@ def showhistory():
 
     login_sessions = [(record[0], record[1].strftime('%Y-%m-%d %H:%M:%S') if record[1] else None, record[2].strftime('%Y-%m-%d %H:%M:%S') if record[2] else None, record[3]) for record in login_sessions]
     return render_template('history.html', login_sessions=login_sessions)
+
+
 @app.route('/history', methods=['POST'])
 def handle_request():
     data = request.get_json()

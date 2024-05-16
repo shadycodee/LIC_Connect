@@ -12,7 +12,7 @@ def connect_to_mysql():
         connection = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="",
+            password="vlackhole",
             database="records"
         )
         return connection
