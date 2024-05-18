@@ -34,7 +34,28 @@ def update_admin_password(new_password):
     cur.close()
 
 
-# settings route
+# Route to check current password
+@app.route('/check_password', methods=['POST'])
+def check_password():
+    data = request.get_json()
+    password = data.get('password')
+    
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT password FROM admin WHERE username = 'admin'")
+    result = cur.fetchone()
+    cur.close()
+
+    if result is None:
+        return jsonify({'correct': False}), 400
+
+    stored_password = result[0]
+
+    if password == stored_password:
+        return jsonify({'correct': True})
+    else:
+        return jsonify({'correct': False}), 400
+
+# Settings route
 @app.route('/admin_settings', methods=['GET', 'POST'])
 def admin_settings():
     if 'authenticated' not in session or not session['authenticated']:
@@ -45,10 +66,8 @@ def admin_settings():
         new_password = request.form['new-password']
         confirm_password = request.form['confirm-password']
 
-
         cur = mysql.connection.cursor()
         cur.execute("SELECT password FROM admin WHERE username = 'admin'")
-
         result = cur.fetchone()
         cur.close()
 
@@ -66,7 +85,11 @@ def admin_settings():
             flash('New Password and Confirm Password do not match', 'error')
             return redirect(url_for('admin_settings'))
 
-        update_admin_password(new_password)
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE admin SET password = %s WHERE username = 'admin'", (new_password,))
+        mysql.connection.commit()
+        cur.close()
+
         flash('Password changed successfully', 'success')
         return redirect(url_for('admin_settings'))
 
