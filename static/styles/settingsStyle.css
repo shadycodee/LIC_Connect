@@ -19,7 +19,9 @@
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 30%;
+    height: 10%;
+    vertical-align: middle;
 }
 
 /* The Close Button */
@@ -113,3 +115,4 @@ footer img {
     height: 50px;
     width: auto;
 }
+
