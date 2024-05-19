@@ -34,6 +34,30 @@ def update_admin_password(new_password):
     cur.close()
 
 
+## for adding new admins
+@app.route('/add_admin', methods=['GET', 'POST'])
+def add_admin():
+    if request.method == 'POST':
+        # Get form data
+        name = request.form['name']
+        username = request.form['username']
+        password = request.form['password']
+        
+        cur = mysql.connection.cursor()
+        try:
+            cur.execute("INSERT INTO admin (name, username, password) VALUES (%s, %s, %s)", (name, username, password))
+            mysql.connection.commit()
+            flash('Admin added successfully!', 'success')
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f'An error occurred: {e}', 'error')
+        finally:
+            cur.close()
+
+        return redirect(url_for('dashboard'))
+
+    return render_template('createAdmin.html')
+
 # Route to check current password
 @app.route('/check_password', methods=['POST'])
 def check_password():
@@ -94,17 +118,6 @@ def admin_settings():
         return redirect(url_for('admin_settings'))
 
     return render_template('adminSettings.html')
-
-
-@app.route('/add_admin', methods=['GET', 'POST'])
-def add_admin():
-    if request.method == 'POST':
-        # Placeholder for future database handling code
-        # For now, just flash a success message for form submission
-        flash('Form submitted successfully! (Database functionality not yet implemented)', 'success')
-        return redirect(url_for('add_admin'))
-
-    return render_template('createAdmin.html')
 
 
 @app.route('/admin_login', methods=['GET', 'POST'])
