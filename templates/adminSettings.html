@@ -11,6 +11,9 @@
 <body>
     <main>
         <h1>Admin Settings</h1>
+
+        <!-- Go Back Button -->
+        <a class="go-back" href="/dashboard"><span>&lt; Go Back</span></a>
         
         <form id="settingsForm" action="/admin_settings" method="post">
             <div class="form-group">
@@ -101,9 +104,10 @@
                         modal.style.display = "none";
                     }
 
-                    // When the user clicks on "Yes", submit the form
+                    // When the user clicks on "Yes", submit the form and redirect to dashboard
                     confirmBtn.onclick = function() {
                         document.getElementById("settingsForm").submit();
+                        window.location.href = "/dashboard"; // Redirect to the dashboard after form submission
                     }
 
                     // When the user clicks anywhere outside of the modal, close it

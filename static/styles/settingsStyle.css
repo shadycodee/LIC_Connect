@@ -116,3 +116,18 @@ footer img {
     width: auto;
 }
 
+.go-back {
+    position: absolute;
+    top: 80px;
+    right: 39%;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover span{
+    text-decoration: underline;
+    color: black;
+
+}
