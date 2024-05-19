@@ -96,6 +96,17 @@ def admin_settings():
     return render_template('adminSettings.html')
 
 
+@app.route('/add_admin', methods=['GET', 'POST'])
+def add_admin():
+    if request.method == 'POST':
+        # Placeholder for future database handling code
+        # For now, just flash a success message for form submission
+        flash('Form submitted successfully! (Database functionality not yet implemented)', 'success')
+        return redirect(url_for('add_admin'))
+
+    return render_template('createAdmin.html')
+
+
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
