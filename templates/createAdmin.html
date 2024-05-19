@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/settingsStyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/createAdminStyle.css') }}">
     <title>Add New Admin</title>
 </head>
 <body>
@@ -15,21 +15,16 @@
         
         <form id="adminForm" action="/add_admin" method="post">
             <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" name="confirm-password" required>
-                <small id="password-match-message" style="color: red; display: none;">Passwords do not match</small>
             </div>
             <button class="btnChange" type="submit">Add Admin</button>
         </form>
@@ -45,17 +40,8 @@
         </div>
 
         <script>
-            function confirmAdd(event) {
+            document.getElementById('adminForm').onsubmit = function(event) {
                 event.preventDefault();
-
-                var password = document.getElementById('password').value;
-                var confirmPassword = document.getElementById('confirm-password').value;
-
-                // Check if password and confirmation password match
-                if (password !== confirmPassword) {
-                    alert('Password and confirmation password do not match!');
-                    return;
-                }
 
                 // Display the modal
                 var modal = document.getElementById("confirmationModal");
@@ -78,7 +64,8 @@
 
                 // When the user clicks on "Yes", submit the form
                 confirmBtn.onclick = function() {
-                    document.getElementById("adminForm").submit();
+                    modal.style.display = "none";
+                    document.getElementById('adminForm').submit();
                 }
 
                 // When the user clicks anywhere outside of the modal, close it
@@ -88,20 +75,6 @@
                     }
                 }
             }
-
-            document.getElementById('adminForm').onsubmit = confirmAdd;
-
-            document.getElementById('confirm-password').addEventListener('input', function() {
-                var password = document.getElementById('password').value;
-                var confirmPassword = document.getElementById('confirm-password').value;
-                var message = document.getElementById('password-match-message');
-
-                if (password !== confirmPassword) {
-                    message.style.display = 'block';
-                } else {
-                    message.style.display = 'none';
-                }
-            });
         </script>
     </main>
     <footer>
