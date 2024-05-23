@@ -9,6 +9,7 @@
     <title>Admin Settings</title>
 </head>
 <body>
+            <a class="go-back" href="/dashboard"><span>&lt; Go Back</span></a>
     <main>
         <h1>Admin Settings</h1>
         
@@ -24,9 +25,11 @@
             <div class="form-group">
                 <label for="confirm-password">Confirm New Password</label>
                 <input type="password" id="confirm-password" name="confirm-password" required>
+                <small id="password-match-message" style="color: red; display: none;">Passwords do not match</small>
             </div>
-            <button type="submit">Change Password</button>
+            <button class="btnChange" type="submit">Change Password</button>
         </form>
+        
 
         <!-- The Modal -->
         <div id="confirmationModal" class="modal">
@@ -115,6 +118,18 @@
             }
 
             document.getElementById('settingsForm').onsubmit = confirmChange;
+
+            document.getElementById('confirm-password').addEventListener('input', function() {
+                var newPassword = document.getElementById('new-password').value;
+                var confirmPassword = document.getElementById('confirm-password').value;
+                var message = document.getElementById('password-match-message');
+
+                if (newPassword !== confirmPassword) {
+                    message.style.display = 'block';
+                } else {
+                    message.style.display = 'none';
+                }
+            });
         </script>
     </main>
     <footer>

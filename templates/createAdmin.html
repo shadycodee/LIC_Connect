@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/createAdminStyle.css') }}">
+    <title>Add New Admin</title>
+</head>
+<body>
+    <a class="go-back" href="/dashboard"><span>&lt; Go Back</span></a>
+    <main>
+        <h1>Add New Admin</h1>
+        
+        <form id="adminForm" action="/add_admin" method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button class="btnChange" type="submit">Add Admin</button>
+        </form>
+
+        <!-- The Modal -->
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Are you sure you want to add this admin?</p>
+                <button id="confirmButton">Yes</button>
+                <button id="cancelButton">No</button>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('adminForm').onsubmit = function(event) {
+                event.preventDefault();
+
+                // Display the modal
+                var modal = document.getElementById("confirmationModal");
+                modal.style.display = "block";
+
+                // Get the elements
+                var closeBtn = document.getElementsByClassName("close")[0];
+                var confirmBtn = document.getElementById("confirmButton");
+                var cancelBtn = document.getElementById("cancelButton");
+
+                // When the user clicks on <span> (x), close the modal
+                closeBtn.onclick = function() {
+                    modal.style.display = "none";
+                }
+
+                // When the user clicks on "No", close the modal
+                cancelBtn.onclick = function() {
+                    modal.style.display = "none";
+                }
+
+                // When the user clicks on "Yes", submit the form
+                confirmBtn.onclick = function() {
+                    modal.style.display = "none";
+                    document.getElementById('adminForm').submit();
+                }
+
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+            }
+        </script>
+    </main>
+    <footer>
+        <img src="{{ url_for('static', filename='images/lrac_logo.png') }}" alt="school logo">
+    </footer>
+</body>
+</html>

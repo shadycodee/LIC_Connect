@@ -34,7 +34,58 @@ def update_admin_password(new_password):
     cur.close()
 
 
-# settings route
+## for adding new admins
+@app.route('/add_admin', methods=['GET', 'POST'])
+def add_admin():
+    if request.method == 'POST':
+        # Get form data
+        name = request.form['name']
+        username = request.form['username']
+        password = request.form['password']
+        
+        cur = mysql.connection.cursor()
+        try:
+            cur.execute("INSERT INTO admin (name, username, password) VALUES (%s, %s, %s)", (name, username, password))
+            mysql.connection.commit()
+            flash('Admin added successfully!', 'success')
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f'An error occurred: {e}', 'error')
+        finally:
+            cur.close()
+
+        return redirect(url_for('dashboard'))
+
+    return render_template('createAdmin.html')
+
+
+@app.route('/check_password', methods=['POST'])
+def check_password():
+    if 'username' not in session:
+        return jsonify({'correct': False}), 400
+
+    data = request.get_json()
+    password = data.get('password')
+    username = session['username']  # Get the logged-in username from the session
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT password FROM admin WHERE username = %s", (username,))
+    result = cur.fetchone()
+    cur.close()
+
+    if result is None:
+        return jsonify({'correct': False}), 400
+
+    stored_password = result[0]
+
+    if password == stored_password:
+        return jsonify({'correct': True})
+    else:
+        return jsonify({'correct': False}), 400
+
+
+
+# Settings route
 @app.route('/admin_settings', methods=['GET', 'POST'])
 def admin_settings():
     if 'authenticated' not in session or not session['authenticated']:
@@ -44,11 +95,10 @@ def admin_settings():
         current_password = request.form['current-password']
         new_password = request.form['new-password']
         confirm_password = request.form['confirm-password']
-
+        username = session.get('username')  # Get the logged-in username from the session
 
         cur = mysql.connection.cursor()
-        cur.execute("SELECT password FROM admin WHERE username = 'admin'")
-
+        cur.execute("SELECT password FROM admin WHERE username = %s", (username,))
         result = cur.fetchone()
         cur.close()
 
@@ -66,11 +116,16 @@ def admin_settings():
             flash('New Password and Confirm Password do not match', 'error')
             return redirect(url_for('admin_settings'))
 
-        update_admin_password(new_password)
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE admin SET password = %s WHERE username = %s", (new_password, username))
+        mysql.connection.commit()
+        cur.close()
+
         flash('Password changed successfully', 'success')
-        return redirect(url_for('admin_settings'))
+        return redirect(url_for('dashboard'))
 
     return render_template('adminSettings.html')
+
 
 
 @app.route('/admin_login', methods=['GET', 'POST'])
@@ -79,10 +134,7 @@ def admin_login():
         username = request.form['uname']
         password = request.form['pass']
 
-        # Create a cursor object
         cur = mysql.connection.cursor()
-
-        # Execute a query to retrieve the admin credentials
         cur.execute("SELECT username, password FROM admin WHERE username=%s", (username,))
         result = cur.fetchone()
         cur.close()
@@ -94,6 +146,7 @@ def admin_login():
 
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['authenticated'] = True
+            session['username'] = ADMIN_USERNAME  # Store the username in the session
             return redirect(url_for('dashboard'))
         else:
             return render_template('admin_login.html', message='Invalid Credentials')

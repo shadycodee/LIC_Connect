@@ -89,6 +89,22 @@ input[type="password"] {
     box-sizing: border-box;
 }
 
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
 button[type="submit"] {
     display: inline-block;
     padding: 10px 20px;
