@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" type="image/jpeg" href="icon.jpg" >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="admin_home.css">
+    
+    <title>LIC Connect</title>
+</head>
+<body>
+    <header>
+        <div id="head_container">
+            <img src="images/lrac_logo.png" alt="school logo">
+            <ul>
+                <li><a href="">Overview</a></li>
+                <li><a href="">Analytics</a></li>
+                <li>
+                    <a href="#">Account</a>
+                    <ul class="dropdown-content" >
+                        <li><a style="width: 200%;" href="{{ url_for('add_admin')}}" >Create New</a></li>
+                        <li><a style="width: 200%;" href="{{ url_for('admin_settings') }}" >Settings</a></li>
+                        <li><a style="width: 200%;" href="{{ url_for('admin_login') }}" >Logout</a></li>
+                    </ul>
+                </li>
+            </ul> 
+        </div>
+       
+    </header>
+<hr>
+    <div id="tableBtn">
+        <button id="showFormBtn">Add student</button>
+                    <div id="alert-message" class="alert alert-{{ category }}">
+                    </div>
+        <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
+    </div>
+    <!--REGISTER FORM-->
+<div id="overlay">
+    <div id="formContainer">
+        <div id="formheader">
+            <h2>Add Student</h2>
+        </div>
+            
+        <button id="closeFormBtn">&times;</button>
+        <form method="POST" onsubmit="submitForm()">
+
+        <label for="studentid">Student ID</label> 
+        <input type="text" id="studentid" name="studentid" required><br>
+
+        <label for="name">Name</label> <br>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="course">Course</label> <br>
+        <input type="text" id="course" name="course" required><br>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="password2" name="password2" required>
+
+        <button type="submit" onclick="submitForm()">Submit</button>
+        
+      </form>
+    </div>
+  </div>
+<!--REGISTER FORM-->
+<!--HISTORY CONTAINER-->
+    <div id="overlayHistory">
+        <div id="historyForm">
+        <button id="closeHistory">&times;</button>
+        <h1>History</h1>
+        {% if login_sessions %}
+        <style>
+        </style>
+            <div>
+                {% for record in login_sessions %}
+                    <div>
+                        <p><strong>Student ID:</strong> {{ record[0] }}</p>
+                        <p><strong>Login Time:</strong> {{ record[1] }}</p>
+                        <p><strong>Logout Time:</strong> {{ record[2] }}</p>
+                        <p><strong>Consumed Time:</strong> {{ record[3] }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No login sessions available.</p>
+        {% endif %}
+
+     </div>
+    </div>
+<!--HISTORY CONTAINER-->
+
+<!--PAYMENT FORM-->
+<div class="overlayPayment" id="overlaypayment">
+    <div class="paymentcontainer">  
+        <button onclick="closePayment()" class="closepay">&times;</button>  
+        <h1>Payment</h1>
+        <h2>Student ID</h2>
+        <form method="post"></form>
+
+    </div>
+</div>
+<!--PAYMENT FORM-->
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Time Left</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="studentTableBody">
+            {% for student in students %}
+            <tr>
+                <td>{{ student[0] }}</td>
+                <td>{{ student[1] }}</td>
+                <td>{{ student[2] }}</td>
+                <td>{{ student[3] }}</td>
+                <td style="text-align: center;">
+                    <button onclick="showHistory(this)" class="showHistory">History</button>
+                    <button class="paymentbtn" onclick="openModal()">Payment</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    
+</body>
+<script>
+
+    function showHistory(button){
+        var id = button.parentNode.parentNode.cells[0].textContent;
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST","/history", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function (){
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+                if(xhr.status === 200) {
+                    // Request successful, handle response if needed
+                    console.log("Response fron Flask: ", xhr.responseText);
+                } else {
+                    // Request failed, handle error if needed
+                    console.error("Error:", xhr.status);
+                }
+            }
+        };
+        // Convert id to JSON format and send it in the request body
+        var data = JSON.stringify({ "get": id});
+        xhr.send(data);
+    }
+
+    function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        searchRecord();
+    }
+}
+
+    //search student ID
+    function searchRecord() {
+        var input = document.getElementById('searchInput').value.toLowerCase();
+        var table = document.getElementById('studentTableBody');  // Corrected ID
+        var rows = table.getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+            var studentId = cells[0].textContent.toLowerCase();  // Use textContent instead of innerText
+
+            if (studentId.includes(input)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+    
+
+    function submitForm(event) {
+            event.preventDefault();
+
+            // Get form data
+            var formData = {
+                studentid: document.getElementById("studentid").value,
+                name: document.getElementById("name").value,
+                password: document.getElementById("password").value,
+                course: document.getElementById("course").value,
+                 
+            };
+
+            // AJAX request to send form data to the server
+            $.ajax({
+                type: 'POST',
+                url: '/manage',  // Update the URL to the correct endpoint
+                data: formData,
+                success: function(response) {
+                    // Handle the response from the server if needed
+                    console.log(response);
+                    
+                    // Close the overlay
+                    document.getElementById('overlay').style.display = 'none';
+
+                    // Refresh the page to display the updated student list
+                    location.reload();
+                }
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const showFormBtn = document.getElementById('showFormBtn');
+            const overlay = document.getElementById('overlay');
+            const closeFormBtn = document.getElementById('closeFormBtn');
+
+            showFormBtn.addEventListener('click', function () {
+                overlay.style.display = 'flex';
+            });
+
+            closeFormBtn.addEventListener('click', function () {
+                overlay.style.display = 'none';
+            });
+            cancelFormBtn.addEventListener('click', function () {
+                overlay.style.display = 'none';
+    });
+    });
+        
+    document.addEventListener('DOMContentLoaded', function () {
+    const historyButtons = document.querySelectorAll('.showHistory');
+    const overlay = document.getElementById('overlayHistory');
+    const closeform = document.getElementById('closeHistory');
+
+    historyButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const studentId = this.dataset.studentId; // Get the student ID from the button's dataset
+            overlay.style.display = 'flex';
+        });
+    });
+
+    closeform.addEventListener('click', function () {
+        overlay.style.display = 'none';
+    });
+});
+
+    function logout() {
+        // Add your logout functionality here
+        console.log("Logout function triggered.");
+        // Example: Redirect to logout page
+        window.location.href = "admin_login.html"; // Change "logout.php" to your actual logout endpoint
+    }
+
+    // Attach input event listeners to password and confirm password fields
+    document.getElementById("password").addEventListener("input", checkPasswordMatch);
+    document.getElementById("password2").addEventListener("input", checkPasswordMatch);
+    function checkPasswordMatch() {
+            var pass1 = document.getElementById("password").value;
+            var pass2 = document.getElementById("password2").value;
+            var errorSpan = document.getElementById("passwordError");
+
+            if (pass1 !== pass2 && pass2 !== pass1) {
+                errorSpan.textConten
+                
+                t = "Passwords do not match"; 
+            } else if (pass2 !== pass1) {
+                errorSpan.textContent = "Passwords do not match"; 
+            } else {
+                errorSpan.textContent = ""; 
+            }
+        }
+         // Remove the alert message after 5 seconds
+         setTimeout(function() {
+          var alertMessage = document.getElementById('alert-message');
+          if (alertMessage) {
+            alertMessage.remove();
+          }
+        }, 5000);
+        
+
+        // Get the modal element
+    var modal = document.getElementById('overlaypayment');
+
+    // Get the button that opens the modal
+    var btn = document.querySelector('button');
+
+    // Get the close button element
+    var closeBtn = document.querySelector('.closepay');
+
+    function openModal(){
+        modal.style.display = 'block';
+    }
+
+    function closePayment(){
+        modal.style.display = 'none';
+    }
+    // Close modal when user clicks anywhere outside of it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+
+</script>
+</html>

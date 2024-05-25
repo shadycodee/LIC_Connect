@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIC Connect</title>
+    <link rel="stylesheet" href="login.css">
+    <style>
+        body {
+            background-image: url("images/background.jpg");
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <!-- Header content goes here -->
+</header>
+
+<main>
+    <h1>Login</h1>
+    <!-- {% if message %}
+        <p>{{ message }}</p>
+    {% endif %} -->
+    <form action="/admin_login" method="post">
+        <div class="container">
+            <input type="text" id="uname" name="uname" placeholder="Username" required><br>
+            <input type="password" id="pass" name="pass" placeholder="Password" required>  <br>
+            <input type="submit" value="Login">
+        </div>
+    </form>
+</main>
+
+<footer>
+    <!-- Footer content goes here -->
+    <img src="images/lrac_logo.png" alt="lrac logo">
+</footer>
+
+</body>
+</html>
