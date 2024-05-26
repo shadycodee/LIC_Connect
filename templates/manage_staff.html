@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/createAdminStyle.css') }}">
-    <title>Add New Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/manage_staff.css') }}">
+    <title>Add New LIC Staff</title>
 </head>
 <body>
     <a class="go-back" href="/dashboard"><span>&lt; Go Back</span></a>
     <main>
-        <h1>Add New Admin</h1>
+        <h1>Add New LIC Staff</h1>
         
-        <form id="adminForm" action="/add_admin" method="post">
+        <form id="adminForm" action="/add_staff" method="post">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
@@ -26,7 +26,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button class="btnChange" type="submit">Add Admin</button>
+            <button class="btnChange" type="submit"> Add </button>
         </form>
 
         <!-- The Modal -->

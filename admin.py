@@ -35,8 +35,8 @@ def update_admin_password(new_password):
 
 
 ## for adding new admins
-@app.route('/add_admin', methods=['GET', 'POST'])
-def add_admin():
+@app.route('/add_staff', methods=['GET', 'POST'])
+def add_staff():
     if request.method == 'POST':
         # Get form data
         name = request.form['name']
@@ -56,7 +56,7 @@ def add_admin():
 
         return redirect(url_for('dashboard'))
 
-    return render_template('createAdmin.html')
+    return render_template('manage_staff.html')
 
 
 @app.route('/check_password', methods=['POST'])
