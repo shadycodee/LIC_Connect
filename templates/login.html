@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
     <style>
         body {
-            background-image: url("images/background.jpg");
+            background-image: url("{% static 'images/background.jpg' %}");
         }
     </style>
 </head>
@@ -24,10 +24,14 @@
     <!-- {% if message %}
         <p>{{ message }}</p>
     {% endif %} -->
-    <form action="/admin_login" method="post">
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
         <div class="container">
             <input type="text" id="uname" name="uname" placeholder="Username" required><br>
             <input type="password" id="pass" name="pass" placeholder="Password" required>  <br>
+            {% if error_message %}
+        <p class="error-message">{{ error_message }}</p>
+        {% endif %}
             <input type="submit" value="Login">
         </div>
     </form>
@@ -35,7 +39,7 @@
 
 <footer>
     <!-- Footer content goes here -->
-    <img src="images/lrac_logo.png" alt="lrac logo">
+    <img src="{% static 'images/lrac_logo.png' %}" alt="lrac logo">
 </footer>
 
 </body>

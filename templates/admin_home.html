@@ -8,23 +8,23 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% load static %}
-    <link rel="stylesheet" href="admin_home.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin_home.css' %}">
     
     <title>LIC Connect</title>
 </head>
 <body>
     <header>
         <div id="head_container">
-            <img src="images/lrac_logo.png" alt="school logo">
+            <img src="{% static 'images/lrac_logo.png'%}" alt="school logo">
             <ul>
                 <li><a href="">Overview</a></li>
                 <li><a href="">Analytics</a></li>
                 <li>
                     <a href="#">Account</a>
                     <ul class="dropdown-content" >
-                        <li><a style="width: 200%;" href="{{ url_for('add_admin')}}" >Create New</a></li>
-                        <li><a style="width: 200%;" href="{{ url_for('admin_settings') }}" >Settings</a></li>
-                        <li><a style="width: 200%;" href="{{ url_for('admin_login') }}" >Logout</a></li>
+                        <li><a style="width: 200%;" onclick="window.location.href='/manage_staff'">Manage Staff</a></li>
+                        <li><a style="width: 200%;" onclick="window.location.href='/admin_home'" >Settings</a></li>
+                        <li><a style="width: 200%;" onclick="window.location.href='/login'" >Logout</a></li>
                     </ul>
                 </li>
             </ul> 
@@ -74,22 +74,22 @@
         <div id="historyForm">
         <button id="closeHistory">&times;</button>
         <h1>History</h1>
-        {% if login_sessions %}
+     
         <style>
         </style>
             <div>
-                {% for record in login_sessions %}
+                
                     <div>
-                        <p><strong>Student ID:</strong> {{ record[0] }}</p>
-                        <p><strong>Login Time:</strong> {{ record[1] }}</p>
-                        <p><strong>Logout Time:</strong> {{ record[2] }}</p>
-                        <p><strong>Consumed Time:</strong> {{ record[3] }}</p>
+                        <p><strong>Student ID:</strong></p>
+                        <p><strong>Login Time:</strong></p>
+                        <p><strong>Logout Time:</strong></p>
+                        <p><strong>Consumed Time:</strong></p>
                     </div>
-                {% endfor %}
+            
             </div>
-        {% else %}
+     
             <p>No login sessions available.</p>
-        {% endif %}
+      
 
      </div>
     </div>
@@ -117,12 +117,12 @@
             </tr>
         </thead>
         <tbody id="studentTableBody">
-            {% for student in students %}
+        
             <tr>
-                <td>{{ student[0] }}</td>
-                <td>{{ student[1] }}</td>
-                <td>{{ student[2] }}</td>
-                <td>{{ student[3] }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td style="text-align: center;">
                     <button class="edit">Edit</button>
                     <button onclick="showHistory(this)" class="showHistory">History</button>
@@ -130,7 +130,6 @@
                     
                 </td>
             </tr>
-            {% endfor %}
         </tbody>
     </table>
 </div>
