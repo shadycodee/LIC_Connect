@@ -18,31 +18,29 @@
             </div>
         </header>
 
-        <button type="button" class="go-back" onclick="window.location.href='/admin_home'"><span>&lt; Return</span></button>
-    
+        <button type="button" class="go-back" onclick="window.location.href='/admin_home'"><span>&lt; Return</span></button>    
         <h1>Manage LIC Staff</h1>
         <div class="container">
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Username</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                      
+                        {% for staff in staffs %}
                         <tr>
-                            <td></td>
-                            <td></td>
+                            <td>{{ staff.name }}</td>
+                            <td>{{ staff.username }}</td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>
                             </td>
                         </tr>
-                       
+                        {% endfor %}
                     </tbody>
                     
                     </tbody>
@@ -50,7 +48,8 @@
             </div>
             
             <div class="form-container">
-                <form id="adminForm" action="/add_staff" method="post">
+                <form id="adminForm" action="{% url 'manage_staff' %}" method="post">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" required>
