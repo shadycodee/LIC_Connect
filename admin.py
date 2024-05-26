@@ -59,6 +59,14 @@ def add_staff():
     return render_template('manage_staff.html')
 
 
+@app.route('/manage_staff', methods=['GET'])
+def manage_staff():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT name, username FROM admin")
+    admins = cur.fetchall()
+    cur.close()
+    return render_template('manage_staff.html', admins=admins)
+
 @app.route('/check_password', methods=['POST'])
 def check_password():
     if 'username' not in session:
