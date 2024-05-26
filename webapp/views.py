@@ -61,3 +61,10 @@ def manageStaff(request):
     staffs = Staff.objects.all()
 
     return render(request, 'manage_staff.html', {'staffs': staffs})
+
+def deleteStaff(request, staff_id):
+    if request.method == 'POST':
+        staff = Staff.objects.get(pk=staff_id)
+        staff.delete()
+
+    return redirect('manage_staff')

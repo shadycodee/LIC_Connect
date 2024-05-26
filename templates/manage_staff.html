@@ -27,7 +27,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Username</th>
-                            <th>Actions</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,8 +36,11 @@
                             <td>{{ staff.name }}</td>
                             <td>{{ staff.username }}</td>
                             <td>
-                                <button>Edit</button>
-                                <button>Delete</button>
+                                <form id="delete-form-{{ staff.id }}" method="POST" action="{% url 'delete_staff' staff.id %}">
+                                    {% csrf_token %}
+                                    <span id="staff-name-{{ staff.id }}" style="display: none;">{{ staff.name }}</span>
+                                    <button type="button" onclick="confirmDelete('{{ staff.id }}')">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}
@@ -71,7 +74,7 @@
         <div id="confirmationModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <p>Are you sure you want to add this admin?</p>
+                <p>Are you sure you want to add this staff?</p>
                 <button id="confirmButton">Yes</button>
                 <button id="cancelButton">No</button>
             </div>
@@ -111,6 +114,13 @@
                     if (event.target == modal) {
                         modal.style.display = "none";
                     }
+                }
+            }
+
+            function confirmDelete(staffId) {
+                var staffName = document.getElementById('staff-name-' + staffId).innerText;
+                if (confirm(`Are you sure you want to delete the record for "${staffName}"?`)) {
+                    document.getElementById('delete-form-' + staffId).submit();
                 }
             }
         </script>
