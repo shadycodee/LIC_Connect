@@ -20,7 +20,8 @@ from webapp import views
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', views.LoginPage, name='login'),
+    path('', views.loginPage, name='login'),
+    path('logout/', views.logoutPage, name='logout'),
 
     #Staff PATH
     path('staff_home/', views.staffHome, name='staff_home'),

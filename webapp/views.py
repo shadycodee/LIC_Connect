@@ -15,7 +15,7 @@ def createStaff(request):
 
     return render(request, 'manage_staff.html')
 
-def LoginPage(request):
+def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('uname')
         password = request.POST.get('pass')
@@ -33,6 +33,11 @@ def LoginPage(request):
             error_message = 'Invalid credentials'
             return render(request, 'login.html', {'error_message': error_message}) 
     return render(request, 'login.html')
+
+def logoutPage(request):
+    logout(request)
+
+    return redirect('login')
 
 def staffHome(request):
     return render(request, 'staff_home.html')
