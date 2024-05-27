@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Staff
+from .models import Staff, Student
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -79,8 +79,34 @@ def logoutPage(request):
 def staffHome(request):
     return render(request, 'staff_home.html')
 
+    
+        
 def adminHome(request):
-    return render(request, 'admin_home.html')
+    students = Student.objects.all().values('studentID', 'name', 'course', 'time_left')
+    if request.method == 'POST':
+        id = request.POST.get('studentid')
+        name = request.POST.get('name')
+        course = request.POST.get('course')
+        password = request.POST.get('password')
+
+        if not Student.objects.filter(studentID=id).exists():
+            student = Student.objects.create(
+                studentID=id,
+                name=name,
+                course=course,
+                password=password
+            )
+            student.save()
+            messages.success(request, 'Student created successfully.')
+
+        else:
+             messages.error(request, 'Student already exists.')
+
+        
+
+    return render(request, 'admin_home.html', {'students': students})
+
+
 
 def manageStaff(request):
     if request.method == 'POST':
@@ -88,6 +114,7 @@ def manageStaff(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
+        # Password hashing
         hashed_password = make_password(password)
 
         staff = Staff(name=name, username=username, password=hashed_password)

@@ -46,8 +46,8 @@
         </div>
             
         <button id="closeFormBtn">&times;</button>
-        <form method="POST" onsubmit="submitForm()">
-
+        <form method="POST" action="{% url 'admin_home' %}">
+        {% csrf_token %}
         <label for="studentid">Student ID</label> 
         <input type="text" id="studentid" name="studentid" required><br>
 
@@ -60,10 +60,8 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required><br>
 
-        <label for="confirm_password">Confirm Password</label>
-        <input type="password" id="password2" name="password2" required>
 
-        <button type="submit" onclick="submitForm()">Submit</button>
+        <button type="submit">Submit</button>
         
       </form>
     </div>
@@ -106,6 +104,11 @@
     </div>
 </div>
 <!--PAYMENT FORM-->
+<div>
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+</div>
     <table>
         <thead>
             <tr>
@@ -117,12 +120,12 @@
             </tr>
         </thead>
         <tbody id="studentTableBody">
-        
+            {% for student in students %}
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ student.studentID }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.course }}</td>
+                <td> {{ student.time_left }}</td>
                 <td style="text-align: center;">
                     <button class="edit">Edit</button>
                     <button onclick="showHistory(this)" class="showHistory">History</button>
@@ -130,6 +133,7 @@
                     
                 </td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
@@ -185,35 +189,35 @@
     }
     
 
-    function submitForm(event) {
-            event.preventDefault();
+    // function submitForm(event) {
+    //         event.preventDefault();
 
-            // Get form data
-            var formData = {
-                studentid: document.getElementById("studentid").value,
-                name: document.getElementById("name").value,
-                password: document.getElementById("password").value,
-                course: document.getElementById("course").value,
+    //         // Get form data
+    //         var formData = {
+    //             studentid: document.getElementById("studentid").value,
+    //             name: document.getElementById("name").value,
+    //             password: document.getElementById("password").value,
+    //             course: document.getElementById("course").value,
                  
-            };
+    //         };
 
-            // AJAX request to send form data to the server
-            $.ajax({
-                type: 'POST',
-                url: '/manage',  // Update the URL to the correct endpoint
-                data: formData,
-                success: function(response) {
-                    // Handle the response from the server if needed
-                    console.log(response);
+    //         // AJAX request to send form data to the server
+    //         $.ajax({
+    //             type: 'POST',
+    //             url: '/manage',  // Update the URL to the correct endpoint
+    //             data: formData,
+    //             success: function(response) {
+    //                 // Handle the response from the server if needed
+    //                 console.log(response);
                     
-                    // Close the overlay
-                    document.getElementById('overlay').style.display = 'none';
+    //                 // Close the overlay
+    //                 document.getElementById('overlay').style.display = 'none';
 
-                    // Refresh the page to display the updated student list
-                    location.reload();
-                }
-            });
-        }
+    //                 // Refresh the page to display the updated student list
+    //                 location.reload();
+    //             }
+    //         });
+    //     }
 
 
         document.addEventListener('DOMContentLoaded', function () {
