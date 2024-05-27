@@ -25,9 +25,11 @@ urlpatterns = [
 
     #Staff PATH
     path('staff_home/', views.staffHome, name='staff_home'),
+    
 
     # Admin PATH
     path('admin_home/', views.adminHome, name='admin_home'),
     path('manage_staff/', views.manageStaff, name='manage_staff'),
-    path('delete/<int:staff_id>/', views.deleteStaff, name='delete_staff')
+    path('admin_settings/', views.adminSettings, name='admin_settings'),
+    path('delete/<int:staff_id>/', views.deleteStaff, name='delete_staff'),
 ]

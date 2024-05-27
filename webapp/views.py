@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import Staff
 from django.contrib.auth.hashers import make_password
+from django.contrib import messages
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 
@@ -35,6 +38,38 @@ def loginPage(request):
             error_message = 'Invalid credentials'
             return render(request, 'login.html', {'error_message': error_message}) 
     return render(request, 'login.html')
+
+def adminSettings(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        if request.method == 'POST':
+            current_password = request.POST.get('current-password')
+            new_password = request.POST.get('new-password')
+            confirm_password = request.POST.get('confirm-password')
+            
+            # Check if New passwords match
+            if new_password != confirm_password:
+                    messages.error(request, "New password and confirm password do not match.")
+                    return redirect('admin_settings')
+            
+            # Verify current Password
+            if not check_password(current_password, request.user.password):
+                    messages.error(request, "Current password is incorrect.")
+                    return redirect('admin_settings')
+            
+            # Check if new password matches with the current password
+            if request.user.check_password(new_password):
+                    messages.error(request, "New password cannot be the same as the current password.")
+                    return redirect('admin_settings')
+        
+            # Method to change password and then save
+            request.user.set_password(new_password)
+            request.user.save()
+
+            update_session_auth_hash(request, request.user)  # Important to keep the user logged in after password change
+            messages.success(request, "Password changed successfully.")
+            return redirect('admin_settings')
+            
+    return render(request, 'admin_settings.html')
 
 def logoutPage(request):
     logout(request)
