@@ -323,3 +323,10 @@ hr {
     background-color:#872222 ;
     height: 2px;
 }
+
+.btnDelete {
+    border: none;
+    color: white;
+    cursor: pointer;
+    background-color:#e54141;
+}
