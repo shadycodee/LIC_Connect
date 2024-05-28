@@ -122,12 +122,11 @@
         <tbody id="studentTableBody">
             {% for student in students %}
             <tr id="studentRow{{ student.studentID }}">
-                <td ">{{ student.studentID }}</td>
+                <td>{{ student.studentID }}</td>
                 <td>{{ student.name }}</td>
-                <td class="editable">{{ student.course }}</td>
+                <td>{{ student.course }}</td>
                 <td>{{ student.time_left }}</td>
                 <td style="text-align: center;">
-                    <button class="editBtn" id="edit">Edit</button>
                     <button onclick="showHistory(this)" class="showHistory">History</button>
                     <button class="paymentbtn" onclick="openModal()">Payment</button>
                     <button class="btnDelete">Delete</button>
@@ -140,156 +139,6 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-   $(document).ready(function() {
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
- 
-            const csrftoken = getCookie('csrftoken');
- 
-            $('#myTable').on('click', '.editBtn', function() {
-                var $row = $(this).closest('tr');
-                var $editableCells = $row.find('.editable');
-                var id = $editableCells.data('id');
- 
-                if ($(this).text() === 'Edit') {
-                    $editableCells.each(function() {
-                        var cellText = $(this).text();
-                        $(this).html('<input type="text" value="' + cellText + '"/>');
-                    });
-                    $(this).text('Save');
-                } else {
-                    var postData = {
-                        id: id,
-                        updates: {}
-                    };
-                    $editableCells.each(function() {
-                        var cellInput = $(this).find('input').val();
-                        postData.updates[$(this).index()] = cellInput;
-                        $(this).text(cellInput);
-                    });
-                    $(this).text('Edit');
- 
-                    $.ajax({
-                        type: 'POST',
-                        url: '{% url "admin_home" %}',
-                        data: JSON.stringify(postData),
-                        contentType: 'application/json',
-                        headers: {
-                            'X-CSRFToken': csrftoken
-                        },
-                        success: function(response) {
-                            console.log('Row updated successfully:', response);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error updating row:', status, error);
-                        }
-                    });
-                }
-            });
-        });
-</script>
-<script>
-    
-    function editCourse(studentID) {
-        // Get the course cell by student ID
-        var courseCell = document.getElementById('courseCell' + studentID);
-
-        // Get the current course value
-        var currentCourse = courseCell.innerText;
-
-        // Create an input field with the current course value
-        var inputField = document.createElement('input');
-        inputField.type = 'text';
-        inputField.value = currentCourse;
-        inputField.id = 'courseInput' + studentID;
-        inputField.style.width = '100px';  // Set the desired width
-        inputField.style.display = 'inline-block';
-
-        // Create a Save button
-        var saveButton = document.createElement('button');
-        saveButton.innerText = 'Save';
-        saveButton.onclick = function() {
-            saveCourse(studentID);
-        };
-        saveButton.style.display = 'inline-block';
-        saveButton.style.marginLeft = '5px';  // Adjust margin as needed
-
-        // Create a Cancel button
-        var cancelButton = document.createElement('button');
-        cancelButton.innerText = 'Cancel';
-        cancelButton.onclick = function() {
-            cancelEdit(studentID, currentCourse);
-        };
-        cancelButton.style.display = 'inline-block';
-        cancelButton.style.marginLeft = '5px';  // Adjust margin as needed
-
-        // Clear the current cell and append the input field, Save button, and Cancel button
-        courseCell.innerHTML = '';
-        courseCell.appendChild(inputField);
-        courseCell.appendChild(saveButton);
-        courseCell.appendChild(cancelButton);
-    }
-
-function cancelEdit(studentID, originalCourse) {
-    // Get the course cell
-    var courseCell = document.getElementById('courseCell' + studentID);
-
-    // Restore the original course value
-    courseCell.innerHTML = originalCourse;
-
-    // Recreate the Edit button
-    var editButton = document.createElement('button');
-    editButton.innerText = 'Edit';
-    editButton.classList.add('edit');
-    editButton.onclick = function() {
-        editCourse(studentID);
-    };
-    editButton.style.display = 'inline-block';
-    editButton.style.marginLeft = '5px';  // Adjust margin as needed
-
-    courseCell.appendChild(editButton);
-}
-
-function saveCourse(studentID) {
-    // Get the input field and its value
-    var inputField = document.getElementById('courseInput' + studentID);
-    var newCourse = inputField.value;
-
-    // Get the course cell
-    var courseCell = document.getElementById('courseCell' + studentID);
-
-    // Update the course cell with the new value
-    courseCell.innerHTML = newCourse;
-
-    // Recreate the Edit button
-    var editButton = document.createElement('button');
-    editButton.innerText = 'Edit';
-    editButton.classList.add('edit');
-    editButton.onclick = function() {
-        editCourse(studentID);
-    };
-    editButton.style.display = 'inline-block';
-    editButton.style.marginLeft = '5px';  // Adjust margin as needed
-
-    courseCell.appendChild(editButton);
-
-    // Optionally, you can send the new value to the server via AJAX here
-}
-
-
     function showHistory(button){
         var id = button.parentNode.parentNode.cells[0].textContent;
         
