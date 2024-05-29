@@ -67,7 +67,7 @@ def adminSettings(request):
 
             update_session_auth_hash(request, request.user)  # Important to keep the user logged in after password change
             messages.success(request, "Password changed successfully.")
-            return redirect('admin_settings')
+            return redirect('login')
             
     return render(request, 'admin_settings.html')
 
