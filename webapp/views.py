@@ -130,3 +130,10 @@ def deleteStaff(request, staff_id):
         staff.delete()
 
     return redirect('manage_staff')
+
+def deleteStudent(request, studentID):
+    if request.method == 'POST':
+        student = Student.objects.get(pk=studentID)
+        student.delete()
+        messages.success(request, 'Student deleted successfully.')
+    return redirect('admin_home')

@@ -121,20 +121,22 @@
         </thead>
         <tbody id="studentTableBody">
             {% for student in students %}
-            <tr>
-                <td>{{ student.studentID }}</td>
-                <td>{{ student.name }}</td>
-                <td>{{ student.course }}</td>
-                <td> {{ student.time_left }}</td>
-                <td style="text-align: center;">
-                    <button class="edit">Edit</button>
-                    <button onclick="showHistory(this)" class="showHistory">History</button>
-                    <button class="paymentbtn" onclick="openModal()">Payment</button>
-                    <button class="btnDelete">Delete</button>
-                    
-                </td>
-            </tr>
-            {% endfor %}
+                        <tr>
+                            <td>{{ student.studentID }}</td>
+                            <td id="student-Name-{{ student.studentID }}">{{ student.name }}</td>
+                            <td>{{ student.course }}</td>
+                            <td>{{ student.time_left }}</td>
+                            <td style="text-align: center;">
+                                <button class="edit">Edit</button>
+                                <button onclick="showHistory(this)" class="showHistory">History</button>
+                                <button class="paymentbtn" onclick="openModal()">Payment</button>
+                                <form id="delete-form-{{ student.studentID }}" method="POST" action="{% url 'delete_student' student.studentID %}">
+                                    {% csrf_token %}
+                                    <button class="btnDelete" type="button" onclick="confirmDelete('{{ student.studentID }}')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
         </tbody>
     </table>
 </div>
@@ -142,6 +144,14 @@
 </body>
 <script>
 
+function confirmDelete(studentID) {
+                var studentName = document.getElementById('student-Name-' + studentID).innerText;
+                if (confirm(`Are you sure you want to delete the record for "${studentName}"?`)) {
+                    document.getElementById('delete-form-' + studentID).submit();
+                }
+            }
+
+        
     function showHistory(button){
         var id = button.parentNode.parentNode.cells[0].textContent;
         

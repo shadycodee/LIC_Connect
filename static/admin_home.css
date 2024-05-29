@@ -329,4 +329,5 @@ hr {
     color: white;
     cursor: pointer;
     background-color:#e54141;
+    display: inline-block;
 }
