@@ -331,3 +331,15 @@ hr {
     background-color:#e54141;
     display: inline-block;
 }
+
+input[type="text"] {
+    box-sizing: border-box;
+    padding: 5px;
+    font-size: 14px;
+}
+
+button {
+    padding: 5px 10px;
+    margin: 0;
+    font-size: 14px;
+}
