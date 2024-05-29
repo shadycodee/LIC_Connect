@@ -241,8 +241,15 @@ th {
 }
 
 form {
-    max-width: 300px;
-    margin: 0 auto;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.showHistory,
+.paymentbtn,
+.btnDelete {
+    margin-right: 5px; 
 }
 
 form label {
