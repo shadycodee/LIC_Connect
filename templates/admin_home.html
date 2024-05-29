@@ -129,7 +129,7 @@
                 <td style="text-align: center;">
                     <button onclick="showHistory(this)" class="showHistory">History</button>
                     <button class="paymentbtn" onclick="openModal()">Payment</button>
-                    <form id="delete-form-{{ student.studentID }}" method="POST" action="{% url 'delete_student' student.studentID %}">
+                    <form id="delete-form-{{ student.studentID }}" method="POST" action="{% url 'delete_student' student.studentID %}" style="display: inline;">
                         {% csrf_token %}
                         <button class="btnDelete" type="button" onclick="confirmDelete('{{ student.studentID }}')">Delete</button>
                     </form>
