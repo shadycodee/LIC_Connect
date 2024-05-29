@@ -17,7 +17,7 @@
         <div id="head_container">
             <img src="{% static 'images/lrac_logo.png'%}" alt="school logo">
             <ul>
-                <li><a href="">Overview</a></li>
+                <li><a href="">Home</a></li>
                 <li><a href="">Analytics</a></li>
                 <li>
                     <a href="#">Account</a>
@@ -59,7 +59,7 @@
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required><br>
-
+        <input type="checkbox" id="showPassword"> Show Password<br>
 
         <button type="submit">Submit</button>
         
@@ -237,32 +237,6 @@
         // Example: Redirect to logout page
         window.location.href = "admin_login.html"; // Change "logout.php" to your actual logout endpoint
     }
-
-    // Attach input event listeners to password and confirm password fields
-    document.getElementById("password").addEventListener("input", checkPasswordMatch);
-    document.getElementById("password2").addEventListener("input", checkPasswordMatch);
-    function checkPasswordMatch() {
-            var pass1 = document.getElementById("password").value;
-            var pass2 = document.getElementById("password2").value;
-            var errorSpan = document.getElementById("passwordError");
-
-            if (pass1 !== pass2 && pass2 !== pass1) {
-                errorSpan.textConten
-                
-                t = "Passwords do not match"; 
-            } else if (pass2 !== pass1) {
-                errorSpan.textContent = "Passwords do not match"; 
-            } else {
-                errorSpan.textContent = ""; 
-            }
-        }
-         // Remove the alert message after 5 seconds
-         setTimeout(function() {
-          var alertMessage = document.getElementById('alert-message');
-          if (alertMessage) {
-            alertMessage.remove();
-          }
-        }, 5000);
         
 
         // Get the modal element
@@ -288,6 +262,14 @@
         }
     }
 
+    document.getElementById('showPassword').addEventListener('change', function() {
+        var passwordField = document.getElementById('password');
+        if (this.checked) {
+            passwordField.type = 'text';
+        } else {
+            passwordField.type = 'password';
+        }
+    });
 
 </script>
 </body>
