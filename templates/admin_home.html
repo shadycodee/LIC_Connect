@@ -109,7 +109,7 @@
         <p>{{ message }}</p>
     {% endfor %}
 </div>
-    <table>
+    <table id="myTable">
         <thead>
             <tr>
                 <th>Student ID</th>
@@ -137,11 +137,23 @@
                             </td>
                         </tr>
                         {% endfor %}
+            <tr id="studentRow{{ student.studentID }}">
+                <td>{{ student.studentID }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.course }}</td>
+                <td>{{ student.time_left }}</td>
+                <td style="text-align: center;">
+                    <button onclick="showHistory(this)" class="showHistory">History</button>
+                    <button class="paymentbtn" onclick="openModal()">Payment</button>
+                    <button class="btnDelete">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
+        
     </table>
 </div>
-    
-</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
 function confirmDelete(studentID) {
@@ -198,38 +210,6 @@ function confirmDelete(studentID) {
             }
         }
     }
-    
-
-    // function submitForm(event) {
-    //         event.preventDefault();
-
-    //         // Get form data
-    //         var formData = {
-    //             studentid: document.getElementById("studentid").value,
-    //             name: document.getElementById("name").value,
-    //             password: document.getElementById("password").value,
-    //             course: document.getElementById("course").value,
-                 
-    //         };
-
-    //         // AJAX request to send form data to the server
-    //         $.ajax({
-    //             type: 'POST',
-    //             url: '/manage',  // Update the URL to the correct endpoint
-    //             data: formData,
-    //             success: function(response) {
-    //                 // Handle the response from the server if needed
-    //                 console.log(response);
-                    
-    //                 // Close the overlay
-    //                 document.getElementById('overlay').style.display = 'none';
-
-    //                 // Refresh the page to display the updated student list
-    //                 location.reload();
-    //             }
-    //         });
-    //     }
-
 
         document.addEventListener('DOMContentLoaded', function () {
             const showFormBtn = document.getElementById('showFormBtn');
@@ -324,4 +304,6 @@ function confirmDelete(studentID) {
 
 
 </script>
+</body>
+
 </html>
