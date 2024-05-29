@@ -13,7 +13,7 @@ class Staff(models.Model):
     
 
 class Student(models.Model):
-    studentID = models.CharField(max_length=10, primary_key=True)
+    studentID = models.CharField(max_length=15, primary_key=True)
     name = models.CharField(max_length=255)
     course = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
