@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse
-from .models import Student, Payments
+from .models import Student, Payment
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
@@ -162,7 +162,7 @@ def process_payment(request):
         payment_amount = request.POST.get('paymentAmount')
         
         student = get_object_or_404(Student, studentID=student_id)
-        payment = Payments(parent=student, payment=int(payment_amount), time=int(payment_amount) * 4)
+        payment = Payment(parent=student, payment=int(payment_amount), time=int(payment_amount) * 4)
         payment.save()
         
         return redirect('home')

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 class Staff(models.Model):
@@ -22,19 +23,24 @@ class Student(models.Model):
     def __str__(self):
         return self.name
     
-class Sessions(models.Model):
-    parent = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.CharField(max_length=255)
+class Session(models.Model):
+    parent = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='sessions_as_parent')
+    course = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='sessions_as_course')
     date = models.DateField(auto_now_add=True)
     loginTime = models.TimeField(auto_now_add=True)
     logoutTime = models.TimeField(auto_now_add=True)
-    consumedTime = models.IntegerField(default=600)
+    consumedTime = models.IntegerField()
 
     def __str__(self):
         return str(self.parent)
     
-class Payments(models.Model):
+class Payment(models.Model):
     parent = models.ForeignKey(Student, on_delete=models.CASCADE)
-    payment = models.IntegerField(default=15)
-    time = models.IntegerField(default=60)
+    payment = models.IntegerField()
+    time = models.IntegerField()
     date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment for {self.parent}"
+
+
