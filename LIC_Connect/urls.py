@@ -33,4 +33,5 @@ urlpatterns = [
     path('admin_settings/', views.adminSettings, name='admin_settings'),
     path('delete/<int:staff_id>/', views.deleteStaff, name='delete_staff'),
     path('delete_student/<str:studentID>/', views.deleteStudent, name='delete_student'),
+    path('analytics/', views.analytics, name='analytics'),
 ]
