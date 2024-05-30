@@ -29,7 +29,7 @@ def loginPage(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('admin_home')
+            return redirect('home')
         
         # If not authenticated as User, try to authenticate as Staff
         try:
@@ -37,7 +37,7 @@ def loginPage(request):
             if check_password(password, staff.password):
                 # Store staff information in session
                 request.session['staff_id'] = staff.id
-                return redirect('admin_home')  # Redirect to a different home for staff
+                return redirect('home')  # Redirect to a different home for staff
             else:
                 error_message = 'Username or password is incorrect'
                 return render(request, 'login.html', {'error_message': error_message})
@@ -86,9 +86,6 @@ def logoutPage(request):
     logout(request)
 
     return redirect('login')
-
-def staffHome(request):
-    return render(request, 'staff_home.html')
     
 def analytics(request):
      if request.user.is_superuser:
@@ -98,7 +95,7 @@ def analytics(request):
 
     
         
-def adminHome(request):
+def home(request):
     students = Student.objects.all().values('studentID', 'name', 'course', 'time_left')
     if request.method == 'POST':
         id = request.POST.get('studentid')
@@ -119,9 +116,7 @@ def adminHome(request):
         else:
              messages.error(request, 'Student already exists.')
 
-        
-
-    return render(request, 'admin_home.html', {'students': students})
+    return render(request, 'home.html', {'students': students})
 
 
 
@@ -156,4 +151,4 @@ def deleteStudent(request, studentID):
         student = Student.objects.get(pk=studentID)
         student.delete()
         messages.success(request, 'Student deleted successfully.')
-    return redirect('admin_home')
+    return redirect('home')

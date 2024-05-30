@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'admin_home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
     
     <title>LIC Connect</title>
 </head>
@@ -46,7 +46,7 @@
         </div>
             
         <button id="closeFormBtn">&times;</button>
-        <form method="POST" action="{% url 'admin_home' %}">
+        <form method="POST" action="{% url 'home' %}">
         {% csrf_token %}
         <label for="studentid">Student ID</label> 
         <input type="text" id="studentid" name="studentid" required><br>
