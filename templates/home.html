@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <link rel="shortcut icon" type="image/jpeg" href="icon.jpg" >
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,86 +28,79 @@
                 </li>
             </ul> 
         </div>
-       
     </header>
 <hr>
     <div id="tableBtn">
         <button id="showFormBtn">Add student</button>
-                    <div id="alert-message" class="alert alert-{{ category }}">
-                    </div>
+        <div id="alert-message" class="alert alert-{{ category }}"></div>
         <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
     </div>
     <!--REGISTER FORM-->
-<div id="overlay">
-    <div id="formContainer">
-        <div id="formheader">
-            <h2>Add Student</h2>
+    <div id="overlay">
+        <div id="formContainer">
+            <div id="formheader">
+                <h2>Add Student</h2>
+            </div>
+            <button id="closeFormBtn">&times;</button>
+            <form method="POST" action="{% url 'home' %}">
+                {% csrf_token %}
+                <label for="studentid">Student ID</label> 
+                <input type="text" id="studentid" name="studentid" required><br>
+
+                <label for="name">Name</label> <br>
+                <input type="text" id="name" name="name" required><br>
+
+                <label for="course">Course</label> <br>
+                <input type="text" id="course" name="course" required><br>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required><br>
+                <input type="checkbox" id="showPassword"> Show Password<br>
+
+                <button type="submit">Submit</button>
+            </form>
         </div>
-            
-        <button id="closeFormBtn">&times;</button>
-        <form method="POST" action="{% url 'home' %}">
-        {% csrf_token %}
-        <label for="studentid">Student ID</label> 
-        <input type="text" id="studentid" name="studentid" required><br>
-
-        <label for="name">Name</label> <br>
-        <input type="text" id="name" name="name" required><br>
-
-        <label for="course">Course</label> <br>
-        <input type="text" id="course" name="course" required><br>
-
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required><br>
-        <input type="checkbox" id="showPassword"> Show Password<br>
-
-        <button type="submit">Submit</button>
-        
-      </form>
     </div>
-  </div>
-<!--REGISTER FORM-->
-<!--HISTORY CONTAINER-->
+    <!--REGISTER FORM-->
+    <!--HISTORY CONTAINER-->
     <div id="overlayHistory">
         <div id="historyForm">
-        <button id="closeHistory">&times;</button>
-        <h1>History</h1>
-     
-        <style>
-        </style>
+            <button id="closeHistory">&times;</button>
+            <h1>History</h1>
             <div>
-                
-                    <div>
-                        <p><strong>Student ID:</strong></p>
-                        <p><strong>Login Time:</strong></p>
-                        <p><strong>Logout Time:</strong></p>
-                        <p><strong>Consumed Time:</strong></p>
-                    </div>
-            
+                <div>
+                    <p><strong>Student ID:</strong></p>
+                    <p><strong>Login Time:</strong></p>
+                    <p><strong>Logout Time:</strong></p>
+                    <p><strong>Consumed Time:</strong></p>
+                </div>
             </div>
-     
             <p>No login sessions available.</p>
-      
-
-     </div>
+        </div>
     </div>
-<!--HISTORY CONTAINER-->
+    <!--HISTORY CONTAINER-->
 
-<!--PAYMENT FORM-->
-<div class="overlayPayment" id="overlaypayment">
-    <div class="paymentcontainer">  
-        <button onclick="closePayment()" class="closepay">&times;</button>  
-        <h1>Payment</h1>
-        <h2>Student ID</h2>
-        <form method="post"></form>
-
+    <!--PAYMENT FORM-->
+    <div class="overlayPayment" id="overlaypayment">
+        <div class="paymentcontainer">  
+            <button onclick="closePayment()" class="closepay">&times;</button>  
+            <h1>Payment</h1>
+            <form method="post" action="{% url 'process_payment' %}">
+                {% csrf_token %}
+                <label for="studentID">Student ID</label>
+                <input type="text" id="studentID" name="studentID" readonly><br>
+                <label for="paymentAmount">Payment Amount</label>
+                <input type="text" id="paymentAmount" name="paymentAmount" required><br>
+                <button type="button" id="btnPayment" type="submit">Submit Payment</button>
+            </form>
+        </div>
     </div>
-</div>
-<!--PAYMENT FORM-->
-<div>
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-</div>
+    <!--PAYMENT FORM-->
+    <div>
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
     <table id="myTable">
         <thead>
             <tr>
@@ -128,7 +120,7 @@
                 <td>{{ student.time_left }}</td>
                 <td style="text-align: center;">
                     <button onclick="showHistory(this)" class="showHistory">History</button>
-                    <button class="paymentbtn" onclick="openModal()">Payment</button>
+                    <button class="paymentbtn" onclick="openModal(this)">Payment</button>
                     <form id="delete-form-{{ student.studentID }}" method="POST" action="{% url 'delete_student' student.studentID %}" style="display: inline;">
                         {% csrf_token %}
                         <button class="btnDelete" type="button" onclick="confirmDelete('{{ student.studentID }}')">Delete</button>
@@ -137,65 +129,56 @@
             </tr>
             {% endfor %}
         </tbody>
-        
     </table>
-</div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
 
-    function confirmDelete(studentID) {
-                    var studentName = document.getElementById('student-Name-' + studentID).innerText;
-                    if (confirm(`Are you sure you want to delete the record for "${studentName}"?`)) {
-                        document.getElementById('delete-form-' + studentID).submit();
-                    }
-                }
-
-    function showHistory(button){
-        var id = button.parentNode.parentNode.cells[0].textContent;
-        
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST","/history", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function (){
-            if(xhr.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status === 200) {
-                    // Request successful, handle response if needed
-                    console.log("Response fron Flask: ", xhr.responseText);
-                } else {
-                    // Request failed, handle error if needed
-                    console.error("Error:", xhr.status);
-                }
-            }
-        };
-        // Convert id to JSON format and send it in the request body
-        var data = JSON.stringify({ "get": id});
-        xhr.send(data);
-    }
-
-    function handleKeyPress(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        searchRecord();
-    }
-}
-
-    //search student ID
-    function searchRecord() {
-        var input = document.getElementById('searchInput').value.toLowerCase();
-        var table = document.getElementById('studentTableBody');  // Corrected ID
-        var rows = table.getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var cells = rows[i].getElementsByTagName('td');
-            var studentId = cells[0].textContent.toLowerCase();  // Use textContent instead of innerText
-
-            if (studentId.includes(input)) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function confirmDelete(studentID) {
+            var studentName = document.getElementById('student-Name-' + studentID).innerText;
+            if (confirm(`Are you sure you want to delete the record for "${studentName}"?`)) {
+                document.getElementById('delete-form-' + studentID).submit();
             }
         }
-    }
+
+        function showHistory(button) {
+            var id = button.parentNode.parentNode.cells[0].textContent;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/history", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log("Response from Flask: ", xhr.responseText);
+                    } else {
+                        console.error("Error:", xhr.status);
+                    }
+                }
+            };
+            var data = JSON.stringify({ "get": id });
+            xhr.send(data);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchRecord();
+            }
+        }
+
+        function searchRecord() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var table = document.getElementById('studentTableBody');
+            var rows = table.getElementsByTagName('tr');
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName('td');
+                var studentId = cells[0].textContent.toLowerCase();
+                if (studentId.includes(input)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function () {
             const showFormBtn = document.getElementById('showFormBtn');
@@ -209,69 +192,56 @@
             closeFormBtn.addEventListener('click', function () {
                 overlay.style.display = 'none';
             });
-            cancelFormBtn.addEventListener('click', function () {
-                overlay.style.display = 'none';
-    });
-    });
-        
-    document.addEventListener('DOMContentLoaded', function () {
-    const historyButtons = document.querySelectorAll('.showHistory');
-    const overlay = document.getElementById('overlayHistory');
-    const closeform = document.getElementById('closeHistory');
-
-    historyButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const studentId = this.dataset.studentId; // Get the student ID from the button's dataset
-            overlay.style.display = 'flex';
         });
-    });
 
-    closeform.addEventListener('click', function () {
-        overlay.style.display = 'none';
-    });
-});
+        document.addEventListener('DOMContentLoaded', function () {
+            const historyButtons = document.querySelectorAll('.showHistory');
+            const overlay = document.getElementById('overlayHistory');
+            const closeform = document.getElementById('closeHistory');
+            historyButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const studentId = this.dataset.studentId;
+                    overlay.style.display = 'flex';
+                });
+            });
+            closeform.addEventListener('click', function () {
+                overlay.style.display = 'none';
+            });
+        });
 
-    function logout() {
-        // Add your logout functionality here
-        console.log("Logout function triggered.");
-        // Example: Redirect to logout page
-        window.location.href = "admin_login.html"; // Change "logout.php" to your actual logout endpoint
-    }
-        
+        function logout() {
+            console.log("Logout function triggered.");
+            window.location.href = "admin_login.html";
+        }
 
-        // Get the modal element
-    var modal = document.getElementById('overlaypayment');
+        var modal = document.getElementById('overlaypayment');
+        var btn = document.querySelector('button');
+        var closeBtn = document.querySelector('.closepay');
 
-    // Get the button that opens the modal
-    var btn = document.querySelector('button');
+        function openModal(button) {
+            var studentId = button.parentNode.parentNode.cells[0].textContent;
+            document.getElementById('studentID').value = studentId;
+            modal.style.display = 'block';
+        }
 
-    // Get the close button element
-    var closeBtn = document.querySelector('.closepay');
-
-    function openModal(){
-        modal.style.display = 'block';
-    }
-
-    function closePayment(){
-        modal.style.display = 'none';
-    }
-    // Close modal when user clicks anywhere outside of it
-    window.onclick = function(event) {
-        if (event.target == modal) {
+        function closePayment() {
             modal.style.display = 'none';
         }
-    }
 
-    document.getElementById('showPassword').addEventListener('change', function() {
-        var passwordField = document.getElementById('password');
-        if (this.checked) {
-            passwordField.type = 'text';
-        } else {
-            passwordField.type = 'password';
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
         }
-    });
 
-</script>
+        document.getElementById('showPassword').addEventListener('change', function() {
+            var passwordField = document.getElementById('password');
+            if (this.checked) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+    </script>
 </body>
-
 </html>

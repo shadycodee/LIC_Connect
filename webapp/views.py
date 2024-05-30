@@ -7,6 +7,9 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse
+from .models import Student, Payments
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -152,3 +155,16 @@ def deleteStudent(request, studentID):
         student.delete()
         messages.success(request, 'Student deleted successfully.')
     return redirect('home')
+
+def process_payment(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('studentID')
+        payment_amount = request.POST.get('paymentAmount')
+        
+        student = get_object_or_404(Student, studentID=student_id)
+        payment = Payments(parent=student, payment=int(payment_amount), time=int(payment_amount) * 4)
+        payment.save()
+        
+        return redirect('home')
+    else:
+        return HttpResponse("Invalid request", status=400)
