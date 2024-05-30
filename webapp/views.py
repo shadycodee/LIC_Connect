@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -24,19 +25,27 @@ def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('uname')
         password = request.POST.get('pass')
-        print(f"Username: {username}, Password: {password}")
-        user = authenticate(request, username=username, password=password)
 
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            if user.is_superuser:
-                return redirect('admin_home')
-            else: 
-                return redirect('staff_home')
+            return redirect('admin_home')
         
-        else:
-            error_message = 'Invalid credentials'
-            return render(request, 'login.html', {'error_message': error_message}) 
+        # If not authenticated as User, try to authenticate as Staff
+        try:
+            staff = Staff.objects.get(username=username)
+            if check_password(password, staff.password):
+                # Store staff information in session
+                request.session['staff_id'] = staff.id
+                return redirect('admin_home')  # Redirect to a different home for staff
+            else:
+                error_message = 'Username or password is incorrect'
+                return render(request, 'login.html', {'error_message': error_message})
+        except Staff.DoesNotExist:
+            error_message = 'Username or password is incorrect'
+            return render(request, 'login.html', {'error_message': error_message})
+        
+        
     return render(request, 'login.html')
 
 def adminSettings(request):
@@ -78,6 +87,12 @@ def logoutPage(request):
 
 def staffHome(request):
     return render(request, 'staff_home.html')
+    
+def analytics(request):
+     if request.user.is_superuser:
+          return render(request, 'analytics.html')
+     else:
+          return HttpResponse("Not allowed to access this page.")
 
     
         
@@ -109,18 +124,21 @@ def adminHome(request):
 
 
 def manageStaff(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    if request.user.is_superuser: 
+        if request.method == 'POST':
+            name = request.POST.get('name')
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-        # Password hashing
-        hashed_password = make_password(password)
+            # Password hashing
+            hashed_password = make_password(password)
 
-        staff = Staff(name=name, username=username, password=hashed_password)
-        staff.save()
+            staff = Staff(name=name, username=username, password=hashed_password)
+            staff.save()
 
-    staffs = Staff.objects.all()
+        staffs = Staff.objects.all()
+    else:
+         return HttpResponse("Not allowed to access this page.")
 
     return render(request, 'manage_staff.html', {'staffs': staffs})
 
