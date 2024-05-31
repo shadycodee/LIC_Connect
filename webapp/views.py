@@ -128,11 +128,15 @@ def manageStaff(request):
             username = request.POST.get('username')
             password = request.POST.get('password')
 
-            # Password hashing
-            hashed_password = make_password(password)
-
-            staff = Staff(name=name, username=username, password=hashed_password)
-            staff.save()
+            # message notification to be followed na lang
+            if Staff.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists. Please choose a different one.')
+            else:
+                hashed_password = make_password(password)
+                staff = Staff(name=name, username=username, password=hashed_password)
+                staff.save()
+                messages.success(request, 'Staff added successfully.')
+                return redirect('manage_staff')  # Prevents form resubmission on refresh
 
         staffs = Staff.objects.all()
     else:
@@ -142,10 +146,11 @@ def manageStaff(request):
 
 def deleteStaff(request, staff_id):
     if request.method == 'POST':
-        staff = Staff.objects.get(pk=staff_id)
+        staff = get_object_or_404(Staff, pk=staff_id)
         staff.delete()
+        messages.success(request, 'Staff deleted successfully.')
+        return redirect('manage_staff')
 
-    return redirect('manage_staff')
 
 def deleteStudent(request, studentID):
     if request.method == 'POST':
