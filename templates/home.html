@@ -35,6 +35,7 @@
         <div id="alert-message" class="alert alert-{{ category }}"></div>
         <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
     </div>
+
     <!--REGISTER FORM-->
     <div id="overlay">
         <div id="formContainer">
@@ -83,7 +84,9 @@
     <!--PAYMENT FORM-->
     <div class="overlayPayment" id="overlaypayment">
         <div class="paymentcontainer">  
-            <button onclick="closePayment()" class="closepay">&times;</button>  
+            <div class="closepayContainer">
+                <button onclick="closePayment()" class="closepay">&times;</button> 
+            </div> 
             <h1>Payment</h1>
             <form method="post" action="{% url 'process_payment' %}">
                 {% csrf_token %}
@@ -91,11 +94,15 @@
                 <input type="text" id="studentID" name="studentID" readonly><br>
                 <label for="paymentAmount">Payment Amount</label>
                 <input type="text" id="paymentAmount" name="paymentAmount" required><br>
-                <button type="button" id="btnPayment" type="submit">Submit Payment</button>
+                <div class="submitContainer">
+                    <button id="btnPayment">Submit Payment</button>
+                </div>
+                
             </form>
         </div>
     </div>
-    <!--PAYMENT FORM-->
+<!--PAYMENT FORM-->
+
     <div>
         {% for message in messages %}
             <p>{{ message }}</p>
@@ -137,6 +144,10 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!--NOTIFICATION-->
+    <div id="notification" class="notification"></div>
+    <!--NOTIFICATION-->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -247,6 +258,24 @@
                 passwordField.type = 'text';
             } else {
                 passwordField.type = 'password';
+            }
+        });
+
+
+        function showNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.innerText = message;
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('message')) {
+                showNotification(urlParams.get('message'));
             }
         });
     </script>
