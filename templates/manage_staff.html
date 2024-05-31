@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/jpeg" href="icon.jpg" >
+    <link rel="shortcut icon" type="image/jpeg" href="icon.jpg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% load static %}
@@ -18,8 +18,20 @@
             </div>
         </header>
 
-        <button type="button" class="go-back" onclick="window.location.href='/home'"><span>&lt; Return</span></button>    
+        {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
         <h1>Manage LIC Staff</h1>
+        <button type="button" class="go-back" onclick="window.location.href='/home'"><span>&lt; Return</span></button>
+        <div class="searchStaff">
+            <input type="text" id="searchInput" placeholder="Search a staff here..." onkeyup="searchTable()">
+        </div>
+        
         <div class="container">
             <div class="table-container">
                 <table>
@@ -30,27 +42,31 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for staff in staffs %}
-                        <tr>
-                            <td>{{ staff.name }}</td>
-                            <td>{{ staff.username }}</td>
-                            <td>
-                                <form id="delete-form-{{ staff.id }}" method="POST" action="{% url 'delete_staff' staff.id %}">
-                                    {% csrf_token %}
-                                    <span id="staff-name-{{ staff.id }}" style="display: none;">{{ staff.name }}</span>
-                                    <button type="button" onclick="confirmDelete('{{ staff.id }}')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
                     
-                    </tbody>
+                    <div class="anotherContainer">
+                        <tbody>
+                            {% for staff in staffs %}
+                            <tr>
+                                <td>{{ staff.name }}</td>
+                                <td>{{ staff.username }}</td>
+                                <td>
+                                    <form id="delete-form-{{ staff.id }}" method="POST" action="{% url 'delete_staff' staff.id %}">
+                                        {% csrf_token %}
+                                        <span id="staff-name-{{ staff.id }}" style="display: none;">{{ staff.name }}</span>
+                                        <button class="deleteBtn" type="button" onclick="confirmDelete('{{ staff.id }}')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </div>
+                    
                 </table>
             </div>
             
+
             <div class="form-container">
+                
                 <form id="adminForm" action="{% url 'manage_staff' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
@@ -75,8 +91,8 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <p>Are you sure you want to add this staff?</p>
-                <button id="confirmButton">Yes</button>
-                <button id="cancelButton">No</button>
+                <button class="confirmAddBtn" id="confirmButton">Add</button>
+                <button class="cancelBtn" id="cancelButton">Cancel</button>
             </div>
         </div>
 
@@ -123,8 +139,29 @@
                     document.getElementById('delete-form-' + staffId).submit();
                 }
             }
+
+            function searchTable() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.querySelector(".table-container table");
+                tr = table.getElementsByTagName("tr");
+
+                for (i = 1; i < tr.length; i++) {
+                    tr[i].style.display = "none";
+                    td = tr[i].getElementsByTagName("td");
+                    for (var j = 0; j < td.length - 1; j++) {
+                        if (td[j]) {
+                            txtValue = td[j].textContent || td[j].innerText;
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         </script>
     </main>
-
 </body>
 </html>
