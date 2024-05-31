@@ -14,7 +14,7 @@ class Staff(models.Model):
     
 
 class Student(models.Model):
-    studentID = models.CharField(max_length=10, primary_key=True)
+    studentID = models.CharField(max_length=15, primary_key=True)
     name = models.CharField(max_length=255)
     course = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
@@ -25,11 +25,11 @@ class Student(models.Model):
     
 class Session(models.Model):
     parent = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='sessions_as_parent')
-    course = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='sessions_as_course')
+    course = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
     loginTime = models.TimeField(auto_now_add=True)
-    logoutTime = models.TimeField(auto_now_add=True)
-    consumedTime = models.IntegerField()
+    logoutTime = models.TimeField(null=True, blank=True)
+    consumedTime = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return str(self.parent)
