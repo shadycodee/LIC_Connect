@@ -7,9 +7,10 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse
-from .models import Student, Payment
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from .models import Payment
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+
 
 # Create your views here.
 
@@ -60,18 +61,18 @@ def adminSettings(request):
             
             # Check if New passwords match
             if new_password != confirm_password:
-                    messages.error(request, "New password and confirm password do not match.")
-                    return redirect('admin_settings')
+                messages.error(request, "New password and confirm password do not match.")
+                return redirect('admin_settings')
             
             # Verify current Password
             if not check_password(current_password, request.user.password):
-                    messages.error(request, "Current password is incorrect.")
-                    return redirect('admin_settings')
+                messages.error(request, "Current password is incorrect.")
+                return redirect('admin_settings')
             
             # Check if new password matches with the current password
             if request.user.check_password(new_password):
-                    messages.error(request, "New password cannot be the same as the current password.")
-                    return redirect('admin_settings')
+                messages.error(request, "New password cannot be the same as the current password.")
+                return redirect('admin_settings')
         
             # Method to change password and then save
             request.user.set_password(new_password)
@@ -81,7 +82,7 @@ def adminSettings(request):
             messages.success(request, "Password changed successfully.")
             return redirect('login')
     else:
-         return HttpResponse("Not allowed to access this page. ")
+         return HttpResponse("Not allowed to access this page.")
             
     return render(request, 'admin_settings.html')
 
@@ -97,7 +98,6 @@ def analytics(request):
           return HttpResponse("Not allowed to access this page.")
 
     
-        
 def home(request):
     students = Student.objects.all().values('studentID', 'name', 'course', 'time_left')
     if request.method == 'POST':
@@ -114,14 +114,12 @@ def home(request):
                 password=password
             )
             student.save()
-            messages.success(request, 'Student created successfully.')
+            return redirect('/home?message=Student created successfully.')
 
         else:
-             messages.error(request, 'Student already exists.')
+            return redirect('/home?message=Student already exists.')
 
     return render(request, 'home.html', {'students': students})
-
-
 
 def manageStaff(request):
     if request.user.is_superuser: 
@@ -130,11 +128,15 @@ def manageStaff(request):
             username = request.POST.get('username')
             password = request.POST.get('password')
 
-            # Password hashing
-            hashed_password = make_password(password)
-
-            staff = Staff(name=name, username=username, password=hashed_password)
-            staff.save()
+            # message notification to be followed na lang
+            if Staff.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists. Please choose a different one.')
+            else:
+                hashed_password = make_password(password)
+                staff = Staff(name=name, username=username, password=hashed_password)
+                staff.save()
+                messages.success(request, 'Staff added successfully.')
+                return redirect('manage_staff')  # Prevents form resubmission on refresh
 
         staffs = Staff.objects.all()
     else:
@@ -144,27 +146,34 @@ def manageStaff(request):
 
 def deleteStaff(request, staff_id):
     if request.method == 'POST':
-        staff = Staff.objects.get(pk=staff_id)
+        staff = get_object_or_404(Staff, pk=staff_id)
         staff.delete()
+        messages.success(request, 'Staff deleted successfully.')
+        return redirect('manage_staff')
 
-    return redirect('manage_staff')
 
 def deleteStudent(request, studentID):
     if request.method == 'POST':
         student = Student.objects.get(pk=studentID)
         student.delete()
-        messages.success(request, 'Student deleted successfully.')
-    return redirect('home')
+        return redirect('/home?message=Student deleted successfully.')
 
 def process_payment(request):
     if request.method == 'POST':
         student_id = request.POST.get('studentID')
-        payment_amount = request.POST.get('paymentAmount')
-        
+        payment_amount = int(request.POST.get('paymentAmount'))
+
         student = get_object_or_404(Student, studentID=student_id)
-        payment = Payment(parent=student, payment=int(payment_amount), time=int(payment_amount) * 4)
+        time_added = (payment_amount / 15) * 60
+
+        # Update time left
+        student.time_left += time_added
+        student.save()
+        
+        payment = Payment(parent=student, payment=payment_amount, time=time_added)
         payment.save()
         
-        return redirect('home')
+        return redirect(f'{reverse("home")}?message={time_added} minutes added successfully for student "{student.name}".')
     else:
         return HttpResponse("Invalid request", status=400)
+
