@@ -187,16 +187,29 @@
             var input = document.getElementById('searchInput').value.toLowerCase();
             var table = document.getElementById('studentTableBody');
             var rows = table.getElementsByTagName('tr');
+
             for (var i = 0; i < rows.length; i++) {
                 var cells = rows[i].getElementsByTagName('td');
-                var studentId = cells[0].textContent.toLowerCase();
-                if (studentId.includes(input)) {
+                var match = false;
+
+                for (var j = 0; j < cells.length; j++) {
+                    var cellValue = cells[j].textContent.toLowerCase();
+                    if (cellValue.includes(input)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                if (match) {
                     rows[i].style.display = '';
                 } else {
                     rows[i].style.display = 'none';
                 }
             }
         }
+
+        document.getElementById('searchInput').addEventListener('keyup', searchRecord);
+        
 
         document.addEventListener('DOMContentLoaded', function () {
             const showFormBtn = document.getElementById('showFormBtn');
