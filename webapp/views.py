@@ -11,8 +11,21 @@ from .models import Payment
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.http import JsonResponse
+from django.contrib.auth.hashers import check_password
 
 # Create your views here.
+
+def check_password_view(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        encoded_password = request.POST.get('encoded')  # Assuming 'encoded' is the second argument
+
+        if password == encoded_password:
+            return JsonResponse({'correct': True})
+        else:
+            return JsonResponse({'correct': False})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def createStaff(request):
     if request.method == 'POST':

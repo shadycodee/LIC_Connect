@@ -18,12 +18,17 @@ from django.contrib import admin
 from django.urls import path
 from webapp import views
 from django.conf.urls.static import static
+from django.http import HttpResponseNotFound
+
+def favicon_not_found(request):
+    return HttpResponseNotFound()
 
 urlpatterns = [
     path('', views.loginPage, name='login'),
     path('logout/', views.logoutPage, name='logout'),
     path('home/', views.home, name='home'),
     path('student-sessions/<str:student_id>/', views.studentSessions, name='student_sessions'),
+    path('favicon.ico', favicon_not_found),
 
 
     # Admin PATH
@@ -34,4 +39,5 @@ urlpatterns = [
     path('delete_student/<str:studentID>/', views.deleteStudent, name='delete_student'),
     path('analytics/', views.analytics, name='analytics'),
     path('process_payment/', views.process_payment, name='process_payment'),
+    path('check_password', views.check_password_view, name='check_password'),
 ]
