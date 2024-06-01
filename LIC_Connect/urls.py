@@ -40,4 +40,5 @@ urlpatterns = [
     path('analytics/', views.analytics, name='analytics'),
     path('process_payment/', views.process_payment, name='process_payment'),
     path('check_password', views.check_password_view, name='check_password'),
+    path('delete-sessions/', views.delete_sessions, name='delete_sessions'),
 ]

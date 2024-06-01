@@ -1,0 +1,117 @@
+/* Reset default margin and padding */
+body, h1, h2, ul, li, form {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #FFF6EF;
+    margin: 25px;
+    padding: 0;
+}
+header img {
+    height: 50px;
+    width: auto;
+}
+
+/* Container for header */
+#head_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+}
+header {
+    font-family: "Montserrat";
+}
+hr {
+    background-color:#872222 ;
+    height: 2px;
+}
+/* Navigation links */
+#head_container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#head_container ul li {
+    display: inline-block;
+    margin-right: 75px;
+    padding-right: 5px;
+}
+#head_container ul li a {
+    text-decoration: none;
+    color: #B53737;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Dropdown menu */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Container for graphs */
+.graph-container {
+    margin-left: 20px;
+    margin-right: 30px;
+    padding: 5px;
+    border-radius: 15px; /* Rounded corners */
+}
+.graph-container2{
+    margin-left: 20px;
+    margin-right: 30px;
+    padding: 5px;
+    border-radius: 15px; /* Rounded corners */
+}
+
+/* Button for reset all records */
+button {
+    padding: 10px 20px;
+    background-color: #b93d3d;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-left: 25px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+button:hover {
+    background-color: #872222;
+}
+
+/* Success and error alert messages */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}

@@ -3,9 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-g20GKMIp7/vyOVl+hHXYyZLfH/d0igOxx4t9XwbNnCAB+OF6xEtLY1JyjNPcJLO1QdGlZ05Kl7mU6DE/xRcO8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>ANALYTICS</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'analytics.css' %}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   
 </head>
 <body>
-  <h1>WELCOME TO ANALYTICS</h1>  
+  <header>
+    <div id="head_container">
+        <img src="{% static 'images/lrac_logo.png'%}" alt="school logo">
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'analytics' %}">Analytics</a></li>
+            <li>
+                <a href="#">Account</a>
+                <ul class="dropdown-content" >
+                    <li><a style="width: 200%;" onclick="window.location.href='/manage_staff'">Manage Staff</a></li>
+                    <li><a style="width: 200%;" onclick="window.location.href='/admin_settings'" >Settings</a></li>
+                    <li><a style="width: 200%;" onclick="window.location.href='/logout'" >Logout</a></li>
+                </ul>
+            </li>
+        </ul> 
+    </div>
+</header>
+<hr>
+<form method="post" action="{% url 'delete_sessions' %}" id="reset">
+  {% csrf_token %}
+  <button type="button" onclick="confirmReset()">Reset all records</button>
+</form>
+
+  <div class="graph-container">
+    {{ chart|safe }}
+  </div>
+  
+  <div class="graph-container2">
+    {{ chart2|safe }}
+  </div>
+  
+  <script>
+    function confirmReset() {         
+      if (confirm(`Warning: This action will delete all records including Students time. Are you sure you want to continue?`)) {
+          document.getElementById('reset').submit();
+      }
+    }
+  </script>
+
+  
+
+  
+  
 </body>
 </html>
