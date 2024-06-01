@@ -18,14 +18,6 @@
             </div>
         </header>
 
-        {% if messages %}
-                    <ul>
-                        {% for message in messages %}
-                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
         <h1>Manage LIC Staff</h1>
         <button type="button" class="go-back" onclick="window.location.href='/home'"><span>&lt; Return</span></button>
         <div class="searchStaff">
@@ -96,36 +88,42 @@
             </div>
         </div>
 
+        <!--NOTIFICATION-->
+        <div id="notification" class="notification">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <!--NOTIFICATION-->
+
         <script>
             document.getElementById('adminForm').onsubmit = function(event) {
                 event.preventDefault();
 
-                // Display the modal
                 var modal = document.getElementById("confirmationModal");
                 modal.style.display = "block";
 
-                // Get the elements
                 var closeBtn = document.getElementsByClassName("close")[0];
                 var confirmBtn = document.getElementById("confirmButton");
                 var cancelBtn = document.getElementById("cancelButton");
 
-                // When the user clicks on <span> (x), close the modal
                 closeBtn.onclick = function() {
                     modal.style.display = "none";
                 }
 
-                // When the user clicks on "No", close the modal
                 cancelBtn.onclick = function() {
                     modal.style.display = "none";
                 }
 
-                // When the user clicks on "Yes", submit the form
                 confirmBtn.onclick = function() {
                     modal.style.display = "none";
                     document.getElementById('adminForm').submit();
                 }
 
-                // When the user clicks anywhere outside of the modal, close it
                 window.onclick = function(event) {
                     if (event.target == modal) {
                         modal.style.display = "none";
@@ -161,6 +159,23 @@
                     }
                 }
             }
+
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                notification.innerText = message;
+                notification.style.display = 'block';
+
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('message')) {
+                    showNotification(urlParams.get('message'));
+                }
+            });
         </script>
     </main>
 </body>

@@ -135,8 +135,7 @@ def manageStaff(request):
                 hashed_password = make_password(password)
                 staff = Staff(name=name, username=username, password=hashed_password)
                 staff.save()
-                messages.success(request, 'Staff added successfully.')
-                return redirect('manage_staff')  # Prevents form resubmission on refresh
+                return redirect('/manage_staff?message=Staff added successfully!')
 
         staffs = Staff.objects.all()
     else:
@@ -148,8 +147,7 @@ def deleteStaff(request, staff_id):
     if request.method == 'POST':
         staff = get_object_or_404(Staff, pk=staff_id)
         staff.delete()
-        messages.success(request, 'Staff deleted successfully.')
-        return redirect('manage_staff')
+        return redirect('/manage_staff?message=Staff deleted successfully!')
 
 
 def deleteStudent(request, studentID):
