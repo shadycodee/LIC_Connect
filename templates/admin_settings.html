@@ -54,94 +54,94 @@
         </div>
 
         <script>
-            async function checkCurrentPassword(password) {
-                try {
-                    const response = await fetch('/check_password', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ password })
-                    });
+            // async function checkCurrentPassword(password) {
+            //     try {
+            //         const response = await fetch('/check_password', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json'
+            //             },
+            //             body: JSON.stringify({ password })
+            //         });
 
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+            //         if (!response.ok) {
+            //             throw new Error('Network response was not ok');
+            //         }
 
-                    const data = await response.json();
-                    return data.correct;
-                } catch (error) {
-                    console.error('Error:', error);
-                    return false;
-                }
-            }
+            //         const data = await response.json();
+            //         return data.correct;
+            //     } catch (error) {
+            //         console.error('Error:', error);
+            //         return false;
+            //     }
+            // }
 
-            function confirmChange(event) {
-                event.preventDefault();
+            // function confirmChange(event) {
+            //     event.preventDefault();
 
-                var currentPassword = document.getElementById('current-password').value;
-                var newPassword = document.getElementById('new-password').value;
-                var confirmPassword = document.getElementById('confirm-password').value;
+            //     var currentPassword = document.getElementById('current-password').value;
+            //     var newPassword = document.getElementById('new-password').value;
+            //     var confirmPassword = document.getElementById('confirm-password').value;
 
-                // Call the checkCurrentPassword function to verify the current password
-                checkCurrentPassword(currentPassword).then(isCurrentPasswordCorrect => {
-                    if (!isCurrentPasswordCorrect) {
-                        alert('Current password is incorrect!');
-                        return;
-                    }
+            //     // Call the checkCurrentPassword function to verify the current password
+            //     checkCurrentPassword(currentPassword).then(isCurrentPasswordCorrect => {
+            //         if (!isCurrentPasswordCorrect) {
+            //             alert('Current password is incorrect!');
+            //             return;
+            //         }
 
-                    // Check if new password and confirmation password match
-                    if (newPassword !== confirmPassword) {
-                        alert('New password and confirmation password do not match!');
-                        return;
-                    }
+            //         // Check if new password and confirmation password match
+            //         if (newPassword !== confirmPassword) {
+            //             alert('New password and confirmation password do not match!');
+            //             return;
+            //         }
 
-                    // Display the modal
-                    var modal = document.getElementById("confirmationModal");
-                    modal.style.display = "block";
+            //         // Display the modal
+            //         var modal = document.getElementById("confirmationModal");
+            //         modal.style.display = "block";
 
-                    // Get the elements
-                    var closeBtn = document.getElementsByClassName("close")[0];
-                    var confirmBtn = document.getElementById("confirmButton");
-                    var cancelBtn = document.getElementById("cancelButton");
+            //         // Get the elements
+            //         var closeBtn = document.getElementsByClassName("close")[0];
+            //         var confirmBtn = document.getElementById("confirmButton");
+            //         var cancelBtn = document.getElementById("cancelButton");
 
-                    // When the user clicks on <span> (x), close the modal
-                    closeBtn.onclick = function() {
-                        modal.style.display = "none";
-                    }
+            //         // When the user clicks on <span> (x), close the modal
+            //         closeBtn.onclick = function() {
+            //             modal.style.display = "none";
+            //         }
 
-                    // When the user clicks on "No", close the modal
-                    cancelBtn.onclick = function() {
-                        modal.style.display = "none";
-                    }
+            //         // When the user clicks on "No", close the modal
+            //         cancelBtn.onclick = function() {
+            //             modal.style.display = "none";
+            //         }
 
-                    // When the user clicks on "Yes", submit the form
-                    confirmBtn.onclick = function() {
-                        document.getElementById("settingsForm").submit();
-                    }
+            //         // When the user clicks on "Yes", submit the form
+            //         confirmBtn.onclick = function() {
+            //             document.getElementById("settingsForm").submit();
+            //         }
 
-                    // When the user clicks anywhere outside of the modal, close it
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
-                            modal.style.display = "none";
-                        }
-                    }
-                });
-            }
+            //         // When the user clicks anywhere outside of the modal, close it
+            //         window.onclick = function(event) {
+            //             if (event.target == modal) {
+            //                 modal.style.display = "none";
+            //             }
+            //         }
+            //     });
+            // }
 
-            document.getElementById('settingsForm').onsubmit = confirmChange;
+            // document.getElementById('settingsForm').onsubmit = confirmChange;
 
-            document.getElementById('confirm-password').addEventListener('input', function() {
-                var newPassword = document.getElementById('new-password').value;
-                var confirmPassword = document.getElementById('confirm-password').value;
-                var message = document.getElementById('password-match-message');
+            // document.getElementById('confirm-password').addEventListener('input', function() {
+            //     var newPassword = document.getElementById('new-password').value;
+            //     var confirmPassword = document.getElementById('confirm-password').value;
+            //     var message = document.getElementById('password-match-message');
 
-                if (newPassword !== confirmPassword) {
-                    message.style.display = 'block';
-                } else {
-                    message.style.display = 'none';
-                }
-            });
+            //     if (newPassword !== confirmPassword) {
+            //         message.style.display = 'block';
+            //     } else {
+            //         message.style.display = 'none';
+            //     }
+            // });
         </script>
     </main>
     <footer>
