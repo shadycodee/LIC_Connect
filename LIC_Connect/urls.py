@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.loginPage, name='login'),
     path('logout/', views.logoutPage, name='logout'),
     path('home/', views.home, name='home'),
+    path('student-sessions/<str:student_id>/', views.studentSessions, name='student_sessions'),
 
 
     # Admin PATH

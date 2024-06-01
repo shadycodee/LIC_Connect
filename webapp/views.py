@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Staff, Student
+from .models import Staff, Student, Session
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from .models import Payment
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -120,6 +120,14 @@ def home(request):
             return redirect('/home?message=Student already exists.')
 
     return render(request, 'home.html', {'students': students})
+
+def studentSessions(request, student_id):
+    student = get_object_or_404(Student, studentID=student_id)
+    sessions = Session.objects.filter(parent_id=student).values(
+        'course', 'date', 'loginTime', 'logoutTime', 'consumedTime'
+    )
+    
+    return JsonResponse(list(sessions), safe=False)
 
 def manageStaff(request):
     if request.user.is_superuser: 

@@ -68,15 +68,23 @@
         <div id="historyForm">
             <button id="closeHistory">&times;</button>
             <h1>History</h1>
-            <div>
-                <div>
-                    <p><strong>Student ID:</strong></p>
-                    <p><strong>Login Time:</strong></p>
-                    <p><strong>Logout Time:</strong></p>
-                    <p><strong>Consumed Time:</strong></p>
-                </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Date</th>
+                            <th>Login Time</th>
+                            <th>Logout Time</th>
+                            <th>Consumed Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="session-history-body">
+                        <!-- Session data will be appended here -->
+                    </tbody>
+                </table>
             </div>
-            <p>No login sessions available.</p>
+            
         </div>
     </div>
     <!--HISTORY CONTAINER-->
@@ -133,7 +141,7 @@
                 <td>{{ student.course }}</td>
                 <td>{{ student.time_left }}</td>
                 <td style="text-align: center;">
-                    <button onclick="showHistory(this)" class="showHistory">History</button>
+                    <button class="showHistory history-button" data-student-id="{{ student.studentID }}">History</button>
                     <button class="paymentbtn" onclick="openModal(this)">Payment</button>
                     <form id="delete-form-{{ student.studentID }}" method="POST" action="{% url 'delete_student' student.studentID %}" style="display: inline;">
                         {% csrf_token %}
@@ -157,16 +165,19 @@
                 document.getElementById('delete-form-' + studentID).submit();
             }
         }
-
+        function getCSRFToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
         function showHistory(button) {
             var id = button.parentNode.parentNode.cells[0].textContent;
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/history", true);
+            xhr.open("POST", "{% url 'home' %}", true);
             xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("X-CSRFToken", getCSRFToken());
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
-                        console.log("Response from Flask: ", xhr.responseText);
+                        console.log("Response from Django: ", xhr.responseText);
                     } else {
                         console.error("Error:", xhr.status);
                     }
@@ -290,6 +301,31 @@
             if (urlParams.has('message')) {
                 showNotification(urlParams.get('message'));
             }
+        });
+
+        $(document).ready(function() {
+            $('.history-button').click(function() {
+                var studentId = $(this).data('student-id');
+                $.ajax({
+                    url: '/student-sessions/' + studentId + '/',
+                    method: 'GET',
+                    success: function(data) {
+                        var tableBody = $('#session-history-body');
+                        tableBody.empty();
+                        data.forEach(function(session) {
+                            var row = '<tr>' +
+                                '<td>' + session.course + '</td>' +
+                                '<td>' + session.date + '</td>' +
+                                '<td>' + session.loginTime + '</td>' +
+                                '<td>' + (session.logoutTime || '') + '</td>' +
+                                '<td>' + (session.consumedTime || '') + '</td>' +
+                                '</tr>';
+                            tableBody.append(row);
+                        });
+                        $('#historyModal').modal('show');
+                    }
+                });
+            });
         });
     </script>
 </body>
