@@ -44,9 +44,9 @@ def createStaff(request):
     return render(request, 'manage_staff.html')
 def delete_sessions(request):
     if request.method == 'POST':
-        # Payment.objects.all().delete()
-        # Session.objects.all().delete()
-        # Student.objects.all().update(time=600)
+        Payment.objects.all().delete()
+        Session.objects.all().delete()
+        Student.objects.all().update(time=600)
         messages.success(request, "Records Reset")
 
     return redirect('analytics')
