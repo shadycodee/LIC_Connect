@@ -4,6 +4,8 @@ import MySQLdb
 from datetime import datetime, timedelta
 import time
 from tkinter import PhotoImage
+import os
+from PIL import Image, ImageTk
 
 class StudentApp:
     def __init__(self, root):
@@ -30,41 +32,60 @@ class StudentApp:
         
     def create_login_screen(self):
         self.clear_screen()
-        self.root.configure(bg="black")
+        # Disable switching tabs
+        self.root.wm_attributes("-topmost", 1)
+
+         # Disable closing application
+        #self.root.protocol("WM_DELETE_WINDOW", lambda: messagebox.showinfo("Information", "Request denied"))
         container = tk.Frame(self.root)
-        container.grid(row=0, column=0, sticky='nsew')
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
-        
+        container.place(relx=0.5, rely=0.5, anchor='center')
         
         login_frame = tk.Frame(container)
         login_frame.grid(row=0, column=0)
 
-        self.label1 = tk.Label(login_frame, text="StudentID")
-        self.label1.grid(row=0, column=0, padx=10, pady=10, sticky='e')  # Align label to the right
+        # Load and display the image
+        image_path = r"C:/Users/JohnO/OneDrive/Documents/GITHUB/Capstone/LIC_System/LIC_Connect/static/images/gui_logo.png"
+        if os.path.exists(image_path):
+            img = Image.open(image_path)
+            img = img.resize((100, 100))
+            image = ImageTk.PhotoImage(img)
+            image_label = tk.Label(login_frame, image=image)
+            image_label.grid(row=0, column=0, padx=10, pady=10, sticky='w')  # Place the image label in the leftmost column and spanning 4 rows
+            image_label.image = image  # Keep a reference to avoid garbage collection
+
+         # Add additional text
+        self.additional_text = tk.Label(login_frame, text="LIC CONNECT", fg="maroon", font=("Helvetica", 25, "bold"), justify='center')
+        self.additional_text.grid(row=0, column=1, columnspan=2, pady=10)
+
+        self.label1 = tk.Label(login_frame, text="Student ID")
+        self.label1.grid(row=1, column=0, padx=10, pady=10, sticky='e')  # Align label to the right
         
         self.entry1 = tk.Entry(login_frame)
-        self.entry1.grid(row=0, column=1, padx=10, pady=10)
+        self.entry1.grid(row=1, column=1, padx=10, pady=10)
         
         self.label2 = tk.Label(login_frame, text="Password")
-        self.label2.grid(row=1, column=0, padx=10, pady=10, sticky='e')  # Align label to the right
+        self.label2.grid(row=2, column=0, padx=10, pady=10, sticky='e')  # Align label to the right
         
         self.entry2 = tk.Entry(login_frame, show="*")
-        self.entry2.grid(row=1, column=1, padx=10, pady=10)
+        self.entry2.grid(row=2, column=1, padx=10, pady=10)
         
         self.login_button = tk.Button(login_frame, text="Login", command=self.login)
-        self.login_button.grid(row=2, column=0, columnspan=2, pady=10)
+        self.login_button.grid(row=3, column=0, columnspan=2, pady=10)
         
         # # Add an image
         # image = PhotoImage(file="path_to_your_image.png")  # Change "path_to_your_image.png" to the actual path
         # image_label = tk.Label(login_frame, image=image)
         # image_label.grid(row=3, column=0, columnspan=2, pady=10)
         # image_label.image = image  # Keep a reference to avoid garbage collection
-
+    def on_menu_screen_close(self):
+        self.logout()
     def create_menu_screen(self):
         self.clear_screen()
+
         self.root.attributes('-fullscreen', False)
         self.root.geometry('300x200')
+        
+        self.root.protocol("WM_DELETE_WINDOW", self.on_menu_screen_close)
         
         self.elapsed_time = timedelta(0)
         self.login_time = datetime.now()
@@ -95,6 +116,7 @@ class StudentApp:
     def login(self):
         student_id = self.entry1.get()
         password = self.entry2.get()
+
         
         try:
             # Query to select all columns from the webapp_student table for the given studentID and password
