@@ -130,3 +130,23 @@ a:hover span{
     color: black;
 
 }
+
+.notification {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: green;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-family: 'Montserrat', sans-serif;
+    opacity: 0.8;
+}
+
+.notification.error {
+    background-color: red;
+}
+

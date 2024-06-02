@@ -37,16 +37,8 @@
             </div>
             <button class="btnChange" type="submit">Change Password</button>
         </form>
-        {% if messages %}
-        <div>
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endblock %}
+    
+    {% endblock %}
         
 
         <!-- The Modal -->
@@ -59,29 +51,42 @@
             </div>
         </div>
 
+                <!--NOTIFICATION-->
+                <div id="notification" class="notification">
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <!--NOTIFICATION-->
+
         <script>
             async function checkCurrentPassword(password) {
-    try {
-        const response = await fetch('/check_password', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')  // added this
-            },
-            body: JSON.stringify({ password })
-        });
+            try {
+                const response = await fetch('/check_password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')  // added this
+                    },
+                    body: JSON.stringify({ password })
+                });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                return data.correct;
+            } catch (error) {
+                console.error('Error:', error);
+                return false;
+            }
         }
-
-        const data = await response.json();
-        return data.correct;
-    } catch (error) {
-        console.error('Error:', error);
-        return false;
-    }
-}
 
             // Function to get CSRF token from cookies
             function getCookie(name) {
@@ -165,6 +170,29 @@
                     message.style.display = 'none';
                 }
             });
+
+            function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.innerText = message;
+        notification.className = 'notification ' + type;
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const notificationDiv = document.getElementById('notification');
+        if (notificationDiv) {
+            const messages = notificationDiv.querySelectorAll('li');
+            if (messages.length > 0) {
+                const message = messages[0]; // Only display the first message
+                const type = message.className || 'success';
+                showNotification(message.textContent, type);
+            }
+        }
+    });
         </script>
     </main>
     <footer>
