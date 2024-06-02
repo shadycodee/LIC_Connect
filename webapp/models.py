@@ -11,8 +11,6 @@ class Staff(models.Model):
     password = models.CharField(max_length=128, null=True, default=None) 
 
     def save(self, *args, **kwargs):
-        if self.password:
-            self.password = make_password(self.password)
         super().save(*args, **kwargs)
 
     def __str__(self):

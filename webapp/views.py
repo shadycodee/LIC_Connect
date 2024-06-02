@@ -18,6 +18,8 @@ from django.db.models import Sum
 import calendar
 from datetime import date
 from django.db import models
+from django.contrib.auth.hashers import make_password
+
 # Create your views here.
 
 def check_password_view(request):
