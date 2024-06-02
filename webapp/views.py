@@ -192,10 +192,12 @@ def home(request):
                 password=password
             )
             student.save()
-            return redirect('/home?message=Student created successfully.')
+            messages.success(request, 'Student added successfully!')
+            return redirect('home')
 
         else:
-            return redirect('/home?message=Student already exists.')
+            messages.success(request, 'Student already exists!')
+            return redirect('home')
 
     return render(request, 'home.html', {'students': students})
 
@@ -216,12 +218,14 @@ def manageStaff(request):
 
             # message notification to be followed na lang
             if Staff.objects.filter(username=username).exists():
-                messages.error(request, 'Username already exists. Please choose a different one.')
+                messages.error(request, 'Username already exists!')
+                return redirect('manage_staff')
             else:
                 hashed_password = make_password(password)
                 staff = Staff(name=name, username=username, password=hashed_password)
                 staff.save()
-                return redirect('/manage_staff?message=Staff added successfully!')
+                messages.success(request, 'Staff added successfully!')
+                return redirect('manage_staff')
 
         staffs = Staff.objects.all()
     else:
@@ -233,14 +237,16 @@ def deleteStaff(request, staff_id):
     if request.method == 'POST':
         staff = get_object_or_404(Staff, pk=staff_id)
         staff.delete()
-        return redirect('/manage_staff?message=Staff deleted successfully!')
+        messages.success(request, 'Staff deleted successfully!')
+        return redirect('manage_staff')
 
 
 def deleteStudent(request, studentID):
     if request.method == 'POST':
         student = Student.objects.get(pk=studentID)
         student.delete()
-        return redirect('/home?message=Student deleted successfully.')
+        messages.success(request, 'Student deleted successfully!')
+        return redirect('home')
 
 def process_payment(request):
     if request.method == 'POST':
@@ -256,8 +262,8 @@ def process_payment(request):
         
         payment = Payment(parent=student, payment=payment_amount, time=time_added)
         payment.save()
-        
-        return redirect(f'{reverse("home")}?message={time_added} minutes added successfully for student "{student.name}".')
+        messages.success(request, f'{time_added} minutes added successfully for student "{student.name}')
+        return redirect('home')
     else:
         return HttpResponse("Invalid request", status=400)
 

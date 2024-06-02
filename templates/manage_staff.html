@@ -88,12 +88,22 @@
             </div>
         </div>
 
+        <!-- Delete Modal -->
+        <div id="confirmationDelete" class="modalDelete">
+            <div class="modal-delete">
+                <span class="closeDelete">&times;</span>
+                <p>Are you sure you want to delete <span id="staffNameToDelete"></span>?</p>
+                <button class="confirmDeleteBtn" id="confirmBtnDelete">Delete</button>
+                <button class="cancelDeleteBtn" id="cancelBtnDelete">Cancel</button>
+            </div>
+        </div>
+
         <!--NOTIFICATION-->
         <div id="notification" class="notification">
             {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        <li class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
@@ -133,8 +143,31 @@
 
             function confirmDelete(staffId) {
                 var staffName = document.getElementById('staff-name-' + staffId).innerText;
-                if (confirm(`Are you sure you want to delete the record for "${staffName}"?`)) {
+                var confirmationDelete = document.getElementById('confirmationDelete');
+                var closeDelete = document.getElementsByClassName("closeDelete")[0];
+                var confirmBtnDelete = document.getElementById("confirmBtnDelete");
+                var cancelBtnDelete = document.getElementById("cancelBtnDelete");
+                
+                document.getElementById('staffNameToDelete').innerText = `"${staffName}"`;
+                confirmationDelete.style.display = "block";
+
+                closeDelete.onclick = function() {
+                    confirmationDelete.style.display = "none";
+                }
+
+                cancelBtnDelete.onclick = function() {
+                    confirmationDelete.style.display = "none";
+                }
+
+                confirmBtnDelete.onclick = function() {
+                    confirmationDelete.style.display = "none";
                     document.getElementById('delete-form-' + staffId).submit();
+                }
+
+                window.onclick = function(event) {
+                    if (event.target == confirmationDelete) {
+                        confirmationDelete.style.display = "none";
+                    }
                 }
             }
 
@@ -160,9 +193,10 @@
                 }
             }
 
-            function showNotification(message) {
+            function showNotification(message, type) {
                 const notification = document.getElementById('notification');
                 notification.innerText = message;
+                notification.className = 'notification ' + type;
                 notification.style.display = 'block';
 
                 setTimeout(() => {
@@ -171,9 +205,14 @@
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('message')) {
-                    showNotification(urlParams.get('message'));
+                const notificationDiv = document.getElementById('notification');
+                if (notificationDiv) {
+                    const messages = notificationDiv.querySelectorAll('li');
+                    if (messages.length > 0) {
+                        const message = messages[0]; 
+                        const type = message.className || 'success';
+                        showNotification(message.textContent, type);
+                    }
                 }
             });
         </script>

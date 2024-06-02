@@ -13,15 +13,45 @@
     background-color: rgba(0,0,0,0.4); 
 }
 
-/* Modal Content */
+
+.modalDelete {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
 .modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
     width: 30%;
-    height: 10%;
+    height: 14%;
     vertical-align: middle;
+    border-radius: 7px;
+    border: 2px solid rgb(25, 109, 46);
+}
+
+
+
+.modal-delete {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    height: 14%;
+    vertical-align: middle;
+    border-radius: 7px;
+    border: 2px solid brown;
 }
 
 /* The Close Button */
@@ -251,30 +281,15 @@ th {
 }
 
 .confirmAddBtn {
-    background-color: #2196F3;
+    background-color: rgb(54, 228, 106);
     border-radius: 10px;
-    width: 15%;
+    width: 17%;
     height: 30px;
-    color: white;
+    color: rgb(51, 37, 37);
 }
 
 .confirmAddBtn:hover {
-    background-color: #1D267D;
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.cancelBtn {
-    background-color: #e7e7e7;
-    border-radius: 10px;
-    width: 15%;
-    height: 30px;
-    color: black;
-}
-
-.cancelBtn:hover {
-    background-color: #888;
+    background-color: #338555;
     color: white;
     text-decoration: none;
     cursor: pointer;
@@ -282,6 +297,22 @@ th {
 
 .cancelBtn, .confirmAddBtn {
     font-family: Montserrat;
+}
+
+.cancelBtn {
+    background-color: #e7e7e7;
+    border-radius: 10px;
+    width: 17%;
+    height: 30px;
+    color: black;
+    margin-left: 10px;
+}
+
+.cancelBtn:hover {
+    background-color: #888;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .searchStaff {
@@ -320,4 +351,51 @@ th {
     z-index: 1000;
     font-family: 'Montserrat', sans-serif;
     opacity: 0.8;
+}
+
+.notification.error {
+    background-color: red;
+}
+
+.confirmDeleteBtn {
+    background-color: rgb(211, 40, 40);
+    border-radius: 10px;
+    width: 17%;
+    height: 30px;
+    color: white;
+}
+
+.confirmDeleteBtn:hover {
+    background-color: #701111;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cancelDeleteBtn, .confirmDeleteBtn {
+    font-family: Montserrat;
+}
+
+.cancelDeleteBtn {
+    background-color: #e7e7e7;
+    border-radius: 10px;
+    width: 17%;
+    height: 30px;
+    color: black;
+    margin-left: 10px;
+}
+
+.cancelDeleteBtn:hover {
+    background-color: #888;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* The Close Button */
+.closeDelete {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }

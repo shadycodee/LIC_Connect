@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="shortcut icon" type="image/jpeg" href="icon.jpg" >
+    <link rel="shortcut icon" type="image/jpeg" href="icon.jpg">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
@@ -29,11 +29,11 @@
             </ul> 
         </div>
     </header>
-<hr>
+    <hr>
     <div id="tableBtn">
         <button id="showFormBtn">Add student</button>
         <div id="alert-message" class="alert alert-{{ category }}"></div>
-        <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID..." >
+        <input type="text" id="searchInput" onkeydown="handleKeyPress(event)" placeholder="Search for student ID...">
     </div>
 
     <!--REGISTER FORM-->
@@ -63,6 +63,7 @@
         </div>
     </div>
     <!--REGISTER FORM-->
+
     <!--HISTORY CONTAINER-->
     <div id="overlayHistory">
         <div id="historyForm">
@@ -84,7 +85,6 @@
                     </tbody>
                 </table>
             </div>
-            
         </div>
     </div>
     <!--HISTORY CONTAINER-->
@@ -105,24 +105,21 @@
                 <div class="submitContainer">
                     <button id="btnPayment">Submit Payment</button>
                 </div>
-                
             </form>
         </div>
     </div>
-<!--PAYMENT FORM-->
-
-    <div>
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    </div>
-    </div>
     <!--PAYMENT FORM-->
-    <div>
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
+
+    <!-- The Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Are you sure you want to delete <span id="studentNameToDelete"></span>?</p>
+            <button class="confirmAddBtn" id="confirmButton">Delete</button>
+            <button class="cancelBtn" id="cancelButton">Cancel</button>
+        </div>
     </div>
+
     <table id="myTable">
         <thead>
             <tr>
@@ -145,7 +142,7 @@
                     <button class="paymentbtn" onclick="openModal(this)">Payment</button>
                     <form id="delete-form-{{ student.studentID }}" method="POST" action="{% url 'delete_student' student.studentID %}" style="display: inline;">
                         {% csrf_token %}
-                        <button class="btnDelete" type="button" onclick="confirmDelete('{{ student.studentID }}')">Delete</button>
+                        <button class="btnDelete" type="button" data-student-id="{{ student.studentID }}">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -154,38 +151,58 @@
     </table>
 
     <!--NOTIFICATION-->
-    <div id="notification" class="notification"></div>
+    <div id="notification" class="notification">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
     <!--NOTIFICATION-->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function confirmDelete(studentID) {
-            var studentName = document.getElementById('student-Name-' + studentID).innerText;
-            if (confirm(`Are you sure you want to delete the record for "${studentName}"?`)) {
-                document.getElementById('delete-form-' + studentID).submit();
-            }
-        }
-        function getCSRFToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        }
-        function showHistory(button) {
-            var id = button.parentNode.parentNode.cells[0].textContent;
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "{% url 'home' %}", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("X-CSRFToken", getCSRFToken());
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        console.log("Response from Django: ", xhr.responseText);
-                    } else {
-                        console.error("Error:", xhr.status);
-                    }
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.btnDelete');
+            const confirmationModal = document.getElementById('confirmationModal');
+            const closeModal = document.querySelector('.close');
+            const cancelButton = document.getElementById('cancelButton');
+            const confirmButton = document.getElementById('confirmButton');
+            let studentToDelete = null;
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    studentToDelete = this.dataset.studentId;
+                    const studentName = document.getElementById('student-Name-' + studentToDelete).innerText;
+                    document.getElementById('studentNameToDelete').innerText = `"${studentName}"`;
+                    confirmationModal.style.display = 'block';
+                });
+            });
+
+            closeModal.addEventListener('click', function () {
+                confirmationModal.style.display = 'none';
+                studentToDelete = null;
+            });
+
+            cancelButton.addEventListener('click', function () {
+                confirmationModal.style.display = 'none';
+                studentToDelete = null;
+            });
+
+            confirmButton.addEventListener('click', function () {
+                if (studentToDelete) {
+                    document.getElementById('delete-form-' + studentToDelete).submit();
                 }
-            };
-            var data = JSON.stringify({ "get": id });
-            xhr.send(data);
-        }
+            });
+
+            window.onclick = function(event) {
+                if (event.target == confirmationModal) {
+                    confirmationModal.style.display = 'none';
+                }
+            }
+        });
 
         function handleKeyPress(event) {
             if (event.key === "Enter") {
@@ -220,7 +237,6 @@
         }
 
         document.getElementById('searchInput').addEventListener('keyup', searchRecord);
-        
 
         document.addEventListener('DOMContentLoaded', function () {
             const showFormBtn = document.getElementById('showFormBtn');
@@ -285,21 +301,26 @@
             }
         });
 
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
 
-        function showNotification(message) {
-        const notification = document.getElementById('notification');
-        notification.innerText = message;
-        notification.style.display = 'block';
-
-        setTimeout(() => {
-            notification.style.display = 'none';
-        }, 3000);
-    }
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
 
         document.addEventListener('DOMContentLoaded', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('message')) {
-                showNotification(urlParams.get('message'));
+            const notificationDiv = document.getElementById('notification');
+            if (notificationDiv) {
+                const messages = notificationDiv.querySelectorAll('li');
+                if (messages.length > 0) {
+                    const message = messages[0]; // Only display the first message
+                    const type = message.className || 'success';
+                    showNotification(message.textContent, type);
+                }
             }
         });
 

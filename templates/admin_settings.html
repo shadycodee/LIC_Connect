@@ -172,27 +172,27 @@
             });
 
             function showNotification(message, type) {
-        const notification = document.getElementById('notification');
-        notification.innerText = message;
-        notification.className = 'notification ' + type;
-        notification.style.display = 'block';
+                const notification = document.getElementById('notification');
+                notification.innerText = message;
+                notification.className = 'notification ' + type;
+                notification.style.display = 'block';
 
-        setTimeout(() => {
-            notification.style.display = 'none';
-        }, 3000);
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const notificationDiv = document.getElementById('notification');
-        if (notificationDiv) {
-            const messages = notificationDiv.querySelectorAll('li');
-            if (messages.length > 0) {
-                const message = messages[0]; // Only display the first message
-                const type = message.className || 'success';
-                showNotification(message.textContent, type);
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
             }
-        }
-    });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const notificationDiv = document.getElementById('notification');
+                if (notificationDiv) {
+                    const messages = notificationDiv.querySelectorAll('li');
+                    if (messages.length > 0) {
+                        const message = messages[0]; // Only display the first message
+                        const type = message.className || 'success';
+                        showNotification(message.textContent, type);
+                    }
+                }
+            });
         </script>
     </main>
     <footer>
