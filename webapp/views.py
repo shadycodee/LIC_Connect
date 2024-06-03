@@ -198,7 +198,7 @@ def home(request):
             return redirect('home')
 
         else:
-            messages.success(request, 'Student already exists!')
+            messages.error(request, 'Student already exists!')
             return redirect('home')
 
     return render(request, 'home.html', {'students': students})

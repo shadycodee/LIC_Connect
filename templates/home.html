@@ -90,25 +90,36 @@
     <!--HISTORY CONTAINER-->
 
     <!--PAYMENT FORM-->
-    <div class="overlayPayment" id="overlaypayment">
-        <div class="paymentcontainer">  
-            <div class="closepayContainer">
-                <button onclick="closePayment()" class="closepay">&times;</button> 
-            </div> 
-            <h1>Payment</h1>
-            <form method="post" action="{% url 'process_payment' %}">
-                {% csrf_token %}
-                <label for="studentID">Student ID</label>
-                <input type="text" id="studentID" name="studentID" readonly><br>
-                <label for="paymentAmount">Payment Amount</label>
-                <input type="text" id="paymentAmount" name="paymentAmount" required><br>
-                <div class="submitContainer">
-                    <button id="btnPayment">Submit Payment</button>
-                </div>
-            </form>
+        <div class="overlayPayment" id="overlaypayment">
+            <div class="paymentcontainer">  
+                <div class="closepayContainer">
+                    <button onclick="closePayment()" class="closepay">&times;</button> 
+                </div> 
+                <h1>Payment</h1>
+                <form id="paymentForm" method="post" action="{% url 'process_payment' %}">
+                    {% csrf_token %}
+                    <label for="studentID">Student ID</label>
+                    <input type="text" id="studentID" name="studentID" readonly><br>
+                    <label for="paymentAmount">Payment Amount</label>
+                    <input type="text" id="paymentAmount" name="paymentAmount" required><br>
+                    <div class="submitContainer">
+                        <button id="btnPayment">Submit Payment</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
     <!--PAYMENT FORM-->
+
+        <!-- Confirm Payment Modal -->
+        <div id="confirmationPay" class="confirmPayModal">
+            <div class="modal-payment">
+                <span class="close">&times;</span>
+                <p>Are you sure you want to add time to user?</p>
+                <button class="confirmPayBtn" id="confirmPaymentButton">Confirm</button>
+                <button class="cancelPayBtn" id="cancelPayButton">Cancel</button>
+            </div>
+        </div>
+
 
     <!-- The Modal -->
     <div id="confirmationModal" class="modal">
@@ -164,6 +175,46 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const confirmationModal = document.getElementById('confirmationPay');
+            const closeModal = confirmationModal.querySelector('.close');
+            const cancelButton = document.getElementById('cancelPayButton');
+            const confirmButton = document.getElementById('confirmPaymentButton');
+            const paymentForm = document.getElementById('paymentForm');
+
+            let formToSubmit = null;
+
+            paymentForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+                formToSubmit = this;
+                confirmationModal.style.display = 'block'; // Show the confirmation modal
+            });
+
+            closeModal.addEventListener('click', function () {
+                confirmationModal.style.display = 'none'; // Hide the confirmation modal
+                formToSubmit = null;
+            });
+
+            cancelButton.addEventListener('click', function () {
+                confirmationModal.style.display = 'none'; // Hide the confirmation modal
+                formToSubmit = null;
+            });
+
+            confirmButton.addEventListener('click', function () {
+                if (formToSubmit) {
+                    formToSubmit.submit(); // Submit the form
+                }
+            });
+
+            window.onclick = function(event) {
+                if (event.target == confirmationModal) {
+                    confirmationModal.style.display = 'none'; // Close the confirmation modal if clicked outside
+                    formToSubmit = null;
+                }
+            }
+        });
+
+
         document.addEventListener('DOMContentLoaded', function () {
             const deleteButtons = document.querySelectorAll('.btnDelete');
             const confirmationModal = document.getElementById('confirmationModal');
