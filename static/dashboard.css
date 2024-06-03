@@ -574,3 +574,17 @@ button {
 #confirmationPay {
     z-index: 9999;
 }
+
+.closeX {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeX:hover,
+.closeX:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

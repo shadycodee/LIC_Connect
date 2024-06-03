@@ -124,7 +124,7 @@
     <!-- The Modal -->
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="closeX">&times;</span>
             <p>Are you sure you want to delete <span id="studentNameToDelete"></span>?</p>
             <button class="confirmAddBtn" id="confirmButton">Delete</button>
             <button class="cancelBtn" id="cancelButton">Cancel</button>
@@ -181,7 +181,7 @@
             const cancelButton = document.getElementById('cancelPayButton');
             const confirmButton = document.getElementById('confirmPaymentButton');
             const paymentForm = document.getElementById('paymentForm');
-
+            
             let formToSubmit = null;
 
             paymentForm.addEventListener('submit', function (event) {
@@ -208,7 +208,7 @@
 
             window.onclick = function(event) {
                 if (event.target == confirmationModal) {
-                    confirmationModal.style.display = 'none'; // Close the confirmation modal if clicked outside
+                    confirmationModal.style.display = 'none'; 
                     formToSubmit = null;
                 }
             }
@@ -222,7 +222,13 @@
             const cancelButton = document.getElementById('cancelButton');
             const confirmButton = document.getElementById('confirmButton');
             let studentToDelete = null;
+
+            var closeX = document.getElementsByClassName("closeX")[0];
             
+            closeX.onclick = function() {
+                    confirmationModal.style.display = "none";
+                }
+
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     studentToDelete = this.dataset.studentId;
