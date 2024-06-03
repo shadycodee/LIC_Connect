@@ -109,7 +109,8 @@ def adminSettings(request):
             messages.success(request, "Password changed successfully.")
             return redirect('login')
     else:
-         return HttpResponse("Not allowed to access this page.")
+        messages.error(request, "You are restricted to view this page!")
+        return redirect('home')
             
     return render(request, 'admin_settings.html')
 
@@ -173,7 +174,8 @@ def analytics(request):
           
         return render(request, 'analytics.html', context)
      else:
-          return HttpResponse("Not allowed to access this page.")
+            messages.error(request, "You are restricted to view this page!")
+            return redirect('home')
 
     
 def home(request):
@@ -229,7 +231,8 @@ def manageStaff(request):
 
         staffs = Staff.objects.all()
     else:
-         return HttpResponse("Not allowed to access this page.")
+            messages.error(request, "You are restricted to view this page!")
+            return redirect('home')
 
     return render(request, 'manage_staff.html', {'staffs': staffs})
 
