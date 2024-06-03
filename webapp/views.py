@@ -60,7 +60,7 @@ def loginPage(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('dashboard')
         
         # If not authenticated as User, try to authenticate as Staff
         try:
@@ -68,7 +68,7 @@ def loginPage(request):
             if check_password(password, staff.password):
                 # Store staff information in session
                 request.session['staff_id'] = staff.id
-                return redirect('home')  # Redirect to a different home for staff
+                return redirect('dashboard')  # Redirect to a different dashboard for staff
             else:
                 error_message = 'Username or password is incorrect'
                 return render(request, 'login.html', {'error_message': error_message})
@@ -110,7 +110,7 @@ def adminSettings(request):
             return redirect('login')
     else:
         messages.error(request, "You are restricted to view this page!")
-        return redirect('home')
+        return redirect('dashboard')
             
     return render(request, 'admin_settings.html')
 
@@ -175,10 +175,10 @@ def analytics(request):
         return render(request, 'analytics.html', context)
      else:
             messages.error(request, "You are restricted to view this page!")
-            return redirect('home')
+            return redirect('dashboard')
 
     
-def home(request):
+def dashboard(request):
     students = Student.objects.all().values('studentID', 'name', 'course', 'time_left')
     if request.method == 'POST':
         id = request.POST.get('studentid')
@@ -195,13 +195,13 @@ def home(request):
             )
             student.save()
             messages.success(request, 'Student added successfully!')
-            return redirect('home')
+            return redirect('dashboard')
 
         else:
             messages.error(request, 'Student already exists!')
-            return redirect('home')
+            return redirect('dashboard')
 
-    return render(request, 'home.html', {'students': students})
+    return render(request, 'dashboard.html', {'students': students})
 
 def studentSessions(request, student_id):
     student = get_object_or_404(Student, studentID=student_id)
@@ -232,7 +232,7 @@ def manageStaff(request):
         staffs = Staff.objects.all()
     else:
             messages.error(request, "You are restricted to view this page!")
-            return redirect('home')
+            return redirect('dashboard')
 
     return render(request, 'manage_staff.html', {'staffs': staffs})
 
@@ -249,7 +249,7 @@ def deleteStudent(request, studentID):
         student = Student.objects.get(pk=studentID)
         student.delete()
         messages.success(request, 'Student deleted successfully!')
-        return redirect('home')
+        return redirect('dashboard')
 
 def process_payment(request):
     if request.method == 'POST':
@@ -266,7 +266,7 @@ def process_payment(request):
         payment = Payment(parent=student, payment=payment_amount, time=time_added)
         payment.save()
         messages.success(request, f'{time_added} minutes added successfully for student "{student.name}')
-        return redirect('home')
+        return redirect('dashboard')
     else:
         return HttpResponse("Invalid request", status=400)
 

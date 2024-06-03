@@ -26,7 +26,7 @@ def favicon_not_found(request):
 urlpatterns = [
     path('', views.loginPage, name='login'),
     path('logout/', views.logoutPage, name='logout'),
-    path('home/', views.home, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('student-sessions/<str:student_id>/', views.studentSessions, name='student_sessions'),
     path('favicon.ico', favicon_not_found),
 
