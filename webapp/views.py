@@ -16,7 +16,7 @@ import plotly.express as px
 import plotly.graph_objs as go
 from django.db.models import Sum
 import calendar
-from datetime import date
+from django.core.paginator import Paginator
 from django.db import models
 from django.contrib.auth.hashers import make_password
 
@@ -180,6 +180,27 @@ def analytics(request):
     
 def dashboard(request):
     students = Student.objects.all().values('studentID', 'name', 'course', 'time_left')
+
+    # Convert time_left to hh:mm:00 format
+    formatted_students = []
+    for student in students:
+        time_left_minutes = student['time_left']
+        hours = time_left_minutes // 60
+        minutes = time_left_minutes % 60
+        formatted_time_left = f"{hours:02}:{minutes:02}:00"
+        formatted_student = {
+            'studentID': student['studentID'],
+            'name': student['name'],
+            'course': student['course'],
+            'time_left': formatted_time_left,
+        }
+        formatted_students.append(formatted_student)
+    
+    # Implement pagination
+    paginator = Paginator(formatted_students, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     if request.method == 'POST':
         id = request.POST.get('studentid')
         name = request.POST.get('name')
@@ -201,7 +222,7 @@ def dashboard(request):
             messages.error(request, 'Student already exists!')
             return redirect('dashboard')
 
-    return render(request, 'dashboard.html', {'students': students})
+    return render(request, 'dashboard.html', {'page_obj': page_obj})
 
 def studentSessions(request, student_id):
     student = get_object_or_404(Student, studentID=student_id)
