@@ -67,7 +67,7 @@
     <!--HISTORY CONTAINER-->
     <div id="overlayHistory">
         <div id="historyForm">
-            <button id="closeHistory">&times;</button>
+            <span id="closeHistory">&times;</span>
             <h1>History</h1>
             <div class="modal-body">
                 <table class="table">
@@ -93,7 +93,7 @@
         <div class="overlayPayment" id="overlaypayment">
             <div class="paymentcontainer">  
                 <div class="closepayContainer">
-                    <button onclick="closePayment()" class="closepay">&times;</button> 
+                    <span onclick="closePayment()" class="closepay">&times;</button> 
                 </div> 
                 <h1>Payment</h1>
                 <form id="paymentForm" method="post" action="{% url 'process_payment' %}">
@@ -131,7 +131,7 @@
         </div>
     </div>
 
-    <table id="myTable">
+    <table id="myTable" class="studentTable">
         <thead>
             <tr>
                 <th>Student ID</th>

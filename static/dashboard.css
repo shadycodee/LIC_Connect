@@ -286,9 +286,14 @@ form button[type="submit"]:hover {
 .showHistory{
     border: none;
     color: white;
-    background-color: #dccc26;
+    background-color: #e0d01f;
     cursor: pointer;
+    border-radius: 4px;
 }
+.showHistory:hover{
+    background-color: #ecdb20;
+}
+
 #edit {
     border: none;
     color: white;
@@ -301,6 +306,10 @@ form button[type="submit"]:hover {
     background-color: #3a733b;
     color: white;
     cursor: pointer;
+    border-radius: 4px;
+}
+.paymentbtn:hover {
+    background-color: #4b964d;
 }
 
 /*PAYMENT FORM*/
@@ -338,6 +347,10 @@ hr {
     cursor: pointer;
     background-color:#e54141;
     display: inline-block;
+    border-radius: 4px;
+}
+.btnDelete:hover {
+    background-color: #ff4646;
 }
 
 input[type="text"] {
@@ -587,4 +600,35 @@ button {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+#closeHistory {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#closeHistory:hover,
+#closeHistory:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.closepay {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closepay:hover,
+.closepay:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+h1 {
+    color: #701111;
+    font-weight: bold;
 }
