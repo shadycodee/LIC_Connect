@@ -286,7 +286,7 @@ def process_payment(request):
         
         payment = Payment(parent=student, payment=payment_amount, time=time_added)
         payment.save()
-        messages.success(request, f'{time_added} minutes added successfully for student "{student.name}')
+        messages.success(request, f'{time_added} minutes added successfully for student "{student.name}"')
         return redirect('dashboard')
     else:
         return HttpResponse("Invalid request", status=400)
