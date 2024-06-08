@@ -101,10 +101,11 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 65%;
     overflow-y: auto;
+    height: 400px;
     max-height: 400px;
     scrollbar-color: rgb(226, 215, 215) white;
     scrollbar-width: thin;
-
+    flex: 1;
 }
 
 main {
@@ -119,7 +120,15 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 50%;
     border: 2px solid brown;
+    flex: 0 0 350px;
+    max-height: 320px;
 }
+
+.table-container .action-column {
+    width: 100px; 
+    text-align: center;
+}
+
 
 .form-group {
     margin-bottom: 20px;
@@ -398,4 +407,12 @@ th {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
+
+.closeDelete:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
